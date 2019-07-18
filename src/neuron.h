@@ -5,11 +5,11 @@
 class neuron {
 public:
     neuron() : val(-1) {}
-    neuron(float v, Vec2f p) : val(v), pos(p) {}
-    float val = 0;//weight
-    Vec2f pos;
-    Vec3f col{1, 1, 1};
-    float size = 0;
+    neuron(double v, Vec2d p) : val(v), pos(p) {}
+    double val = 0;//weight
+    Vec2d pos;
+    Vec3d col{1, 1, 1};
+    double size = 0;
     void draw(float s);
 };
 

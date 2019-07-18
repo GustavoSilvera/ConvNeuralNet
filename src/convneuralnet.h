@@ -11,8 +11,8 @@ public:
     std::vector<net> network;
     std::vector<layer> ideals;
     int num_networks;
-    float y_scale;
-    float avg_cost;
+    double y_scale;
+    double avg_cost;
     bool training = false;
     void init();
     void new_data(int line);

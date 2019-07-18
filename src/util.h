@@ -7,68 +7,68 @@
 #include "ofMain.h"//main OF include for everything... placed here bc everything includes util...
 static ofTrueTypeFont font;
 
-static inline float clampf(float min, float max, float i) {
+static inline double clampd(double min, double max, double i) {
     if (i > min) {
         if (i < max) return i;
         return max;
     }
     return min;
 }
-inline int sgn(float a) {
+inline int sgn(double a) {
     if (a > 0) return 1;
     if (a < 0) return -1;
     return 0;
 }
-inline float sqr(float a) {
+inline double sqr(double a) {
     return a * a;
 }
-class Vec2f {//3d vector used for everything
+class Vec2d {//3d vector used for everything
 public:
-    Vec2f() : x(0), y(0) {}
-    Vec2f(float X, float Y) : x(X), y(Y) {}
-    float x, y;
-    Vec2f operator*(float f) {
-        return Vec2f(x*f, y*f);
+    Vec2d() : x(0), y(0) {}
+    Vec2d(double X, double Y) : x(X), y(Y) {}
+    double x, y;
+    Vec2d operator*(double f) {
+        return Vec2d(x*f, y*f);
     }
-    float dist(Vec2f v) {
+    double dist(Vec2d v) {
         return sqrt(sqr(v.x - x) + sqr(v.y - y));
     }
-    float dist2(Vec2f v) {//distance squared (optimized)
+    double dist2(Vec2d v) {//distance squared (optimized)
         return (sqr(v.x - x) + sqr(v.y - y) );
     }
-    Vec2f operator+(Vec2f v) {
-        return Vec2f(x + v.x, y + v.y);
+    Vec2d operator+(Vec2d v) {
+        return Vec2d(x + v.x, y + v.y);
     }
-    Vec2f clamp(float min, float max) {
-        float clamped_x = clampf(min, max, x);
-        float clamped_y = clampf(min, max, y);
-        return Vec2f(clamped_x, clamped_y);
+    Vec2d clamp(double min, double max) {
+        double clamped_x = clampd(min, max, x);
+        double clamped_y = clampd(min, max, y);
+        return Vec2d(clamped_x, clamped_y);
     }
 };
 
-class Vec3f {//3d vector used for everything
+class Vec3d {//3d vector used for everything
 public:
-    Vec3f() : x(0), y(0), z(0) {}
-    Vec3f(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
-    float x, y, z;
-    Vec3f operator*(float f) {
-        return Vec3f(x*f, y*f, z*f);
+    Vec3d() : x(0), y(0), z(0) {}
+    Vec3d(double X, double Y, double Z) : x(X), y(Y), z(Z) {}
+    double x, y, z;
+    Vec3d operator*(double f) {
+        return Vec3d(x*f, y*f, z*f);
     }
-    float dist(Vec3f v) {
+    double dist(Vec3d v) {
         return sqrt(sqr(v.x - x) + sqr(v.y - y) + sqr(v.z - z));
     }
-    float dist2(Vec3f v) {//distance squared (optimized)
+    double dist2(Vec3d v) {//distance squared (optimized)
         return (sqr(v.x - x) + sqr(v.y - y) + sqr(v.z - z));
     }
-    Vec3f operator+(Vec3f v) {
-        return Vec3f(x + v.x, y + v.y, z + v.z);
+    Vec3d operator+(Vec3d v) {
+        return Vec3d(x + v.x, y + v.y, z + v.z);
     }
-    Vec3f clamp(float min, float max) {
-        float clamped_x = clampf(min, max, x);
-        float clamped_y = clampf(min, max, y);
-        float clamped_z = clampf(min, max, z);
+    Vec3d clamp(double min, double max) {
+        double clamped_x = clampd(min, max, x);
+        double clamped_y = clampd(min, max, y);
+        double clamped_z = clampd(min, max, z);
 
-        return Vec3f(clamped_x, clamped_y, clamped_z);
+        return Vec3d(clamped_x, clamped_y, clamped_z);
     }
 };
 
@@ -97,13 +97,13 @@ public:
 static void renderFont(){
     font.loadFont("verdana.ttf", 25);//once per setup renderer
 }
-static void drawFontText(float text, Vec2f pos) {
+static void drawFontText(double text, Vec2d pos) {
     if(!font.isLoaded()) renderFont();
     std::stringstream dummyText;
     std::string PRINT;
     dummyText << text;
     dummyText >> PRINT;
     pos.x += 50;
-    font.drawString(PRINT, pos.x, pos.y);
+    font.drawString(PRINT, float(pos.x), float(pos.y));
 }
 #endif // UTIL_H

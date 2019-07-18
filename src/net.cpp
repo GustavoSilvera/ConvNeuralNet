@@ -1,29 +1,28 @@
 #include "net.h"
 
-void net::init(Vec2f p){
+void net::init(Vec2d p){
     num_layers = num_neurons.size();
     for (int i = 0; i < num_layers; i++) {
-        Vec2f layerPos{ p.x + diff * (i + (float)0.5), p.y };
+        Vec2d layerPos{ p.x + diff * (i + 0.5), p.y };
         layers.push_back(layer{ num_neurons[i], layerPos });
     }
     read_data();
     //hovering colors
     for (int i = 0; i < num_layers; i++) {
-        bool isEmpty = (i != 0);//makes all the later layers empty
         layers[i].init();//init all the layers
-        std::vector<Vec3f> ind_col;//individual colors
+        std::vector<Vec3d> ind_col;//individual colors
         for (int j = 0; j < layers[i].num_neurons; j++) {
-            ind_col.push_back(Vec3f{ 1, 1, 1 });//every node group's colour is initially white
+            ind_col.push_back(Vec3d{ 1, 1, 1 });//every node group's colour is initially white
         }
         col.push_back(ind_col);
     }
     //creates random weights
     for (int i = 0; i < num_layers - 1; i++) {//for every (behind) layer [not the last one]
-        std::vector<std::vector<float>> ind_neuron;
+        std::vector<std::vector<double>> ind_neuron;
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
-            std::vector<float> ind_neu_weights;//individual weights
+            std::vector<double> ind_neu_weights;//individual weights
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {//for every neuron in the NEXT layer
-                int rand_max = 200 * weight_max;//2 decimal places (pos/neg from weight_max)
+                int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
                 ind_neu_weights.push_back(((rand() % rand_max) / 100.0) - weight_max);//random from -4 to 4
             }
             ind_neuron.push_back(ind_neu_weights);
@@ -32,32 +31,34 @@ void net::init(Vec2f p){
     }
     //creates random biases
     for (int i = 1; i < num_layers; i++) {//for every later layer (not the first one)
-        std::vector<float> ind_biases;
+        std::vector<double> ind_biases;
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
-            int rand_max = 200 * weight_max;//2 decimal places (pos/neg from weight_max)
+            int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
             ind_biases.push_back(((rand() % rand_max) / 100.0) - weight_max);//individual 'default' biases are 0
         }
         bias.push_back(ind_biases);
     }
 }
 
-float net::sigmoid(float x){
-    const float e = 2.71828182846;
+double net::sigmoid(double x){
+    const double e = 2.71828182846;
     return(1 / (1 + pow(e, -x)));
 }
 
-float net::smooth_RelU(float x){
-    //const float e = 2.71828182846;
-    if(x<5)	return log10f(1 + exp(x));
+double net::smooth_RelU(double x){
+    //const double e = 2.71828182846;
+    if(x<5)	return log10(1 + exp(x));
     return (0.4337151304 * x + 0.0058131963);
 }
 
+const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/neuralNet/";
+
 void net::read_data(){
 #define MAX_LINE 100
-    std::ifstream file("DATA_good.txt");
+    std::ifstream file(kRootDir + "src/DATA_good.txt");
     if(file.is_open()){
         while (!file.eof()) {
-            std::vector<float> ind_data;
+            std::vector<double> ind_data;
             char line[MAX_LINE];
             file.getline(line, MAX_LINE);
             char pos_x[MAX_LINE];
@@ -76,14 +77,14 @@ void net::read_data(){
             data.push_back(ind_data);
         }
     }
-    else cout << "Unable to open file";
+    else cout << "Unable to open file" << std::getenv("CWD");
 }
 
 void net::update_layers(){
     for (int i = 1; i < num_layers; i++) {//only the next layers (last ones)
-        std::vector<float> new_values;
+        std::vector<double> new_values;
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in the next layers
-            float weighted_sum = 0;
+            double weighted_sum = 0;
             for (int k = 0; k < layers[i - 1].num_neurons; k++) {//back to every neuron in last layer
                 weighted_sum += layers[i - 1].n[k].val * weights[i - 1][k][j];//adds to the weighted sum
             }
@@ -107,12 +108,12 @@ void net::comp_avg_cost(layer *opt){
 }
 
 void net::new_data(int line, layer *optimal){
-    std::vector<float> new_inputs;
+    std::vector<double> new_inputs;
     for (int i = 0; i < layers[0].num_neurons; i++) {
         new_inputs.push_back(data[line][i]);
     }
     layers[0].update_value(new_inputs);//first (input) layer is first updates
-    std::vector<float> new_outputs;
+    std::vector<double> new_outputs;
     for (int i = layers[0].num_neurons; i < data[line].size(); i++) {//starting where last loop left off
         new_outputs.push_back(data[line][i]);
     }
@@ -123,8 +124,8 @@ void net::new_data(int line, layer *optimal){
     avg_cost = total_cost / num_errors;
 }
 
-float net::compute_cost(layer *optimal){
-    float error = 0;
+double net::compute_cost(layer *optimal){
+    double error = 0;
     update_layers();
     for (int i = 0; i < layers[num_layers - 1].num_neurons; i++) {
         error += sqr(layers[num_layers - 1].n[i].val - optimal->n[i].val);
@@ -136,7 +137,7 @@ void net::randomize_weights(){
     for (int i = 0; i < num_layers - 1; i++) {//for every layer (except last one)
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {//for every weight its attached to
-                int rand_max = 200 * weight_max;//2 decimal places (pos/neg from weight_max)
+                int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
                 weights[i][j][k] = ((rand() % rand_max ) / 100.0) - weight_max;//new random from -4 to 4
                 bias[i][k] = 0;//reset biases
             }
@@ -144,10 +145,10 @@ void net::randomize_weights(){
     }
 }
 
-net::total_changes net::improve(int i, layer *ideal, vector<float> t_changes){
+net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
     //for (int i = num_layers - 1; i > 1; i--) {//for every layer (except first one) (starting from end\output)
     total_changes t;
-    std::vector<float> changes;
+    std::vector<double> changes;
     if (t_changes.size() == 0) {//basically only for the output layer (same dimens as output-ideal)
         for (int j = 0; j < layers[i].num_neurons; j++) {
             changes.push_back(ideal->n[j].val - layers[i].n[j].val);//difference bw output & ideal
@@ -155,7 +156,7 @@ net::total_changes net::improve(int i, layer *ideal, vector<float> t_changes){
     }
     else {
         for (int j = 0; j < layers[i].num_neurons; j++) {
-            float sum = 0;
+            double sum = 0;
             for (int k = 0; k < t_changes.size(); k++) {
                 sum -= weights[i][j][k] * t_changes[k];//adds up all the WEIGHTED changes from the next layer
             }
@@ -164,12 +165,12 @@ net::total_changes net::improve(int i, layer *ideal, vector<float> t_changes){
     }
     for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
         //compare neuron[i] to ideal_neuron[i];
-        const float step = 0.01;
-        float bias_change = step * changes[j];
-        std::vector<float> ind_mods;
+        const double step = 0.01;
+        double bias_change = step * changes[j];
+        std::vector<double> ind_mods;
         //increase weight if its neuron is positive, decrease if negative;
         for (int k = 0; k < layers[i-1].num_neurons; k++) {//for every (behind)weight its attached to
-            float weight_change = step * sgn(changes[j]) * (layers[i-1].n[k].val);
+            double weight_change = step * sgn(changes[j]) * (layers[i-1].n[k].val);
             //weights[i - 1][k][j] += weight_change;//change weights proportoinal to the error
             ind_mods.push_back(weight_change);
         }
@@ -180,10 +181,10 @@ net::total_changes net::improve(int i, layer *ideal, vector<float> t_changes){
     return t;
 }
 
-void net::avg_improve(layer *ideal, layer *rel_ideal, vector<float> t_changes, int layerInd){
+void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, int layerInd){
     if (t_changes.size() == 0) layerInd = num_layers - 1;//very first condition
     if (layerInd > 0) {//recursion failsafe (exit condition)
-        std::vector<float> tot_changes;
+        std::vector<double> tot_changes;
         std::vector<total_changes> changes;
         const int num_changes = data.size();//total number of data sets (lines)
         for (int line = 0; line < num_changes; line++) {//obtain all the desired modifications from every data set
@@ -191,7 +192,7 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<float> t_changes, i
             changes.push_back(improve(layerInd, ideal, t_changes));
         }
         for (int i = 0; i < layers[layerInd].num_neurons; i++) {//all neurons
-            float avg_bias = 0;
+            double avg_bias = 0;
             for (int j = 0; j < num_changes; j++) {//all data values
                 avg_bias += changes[j].bias_changes[i];//add to average (total)
             }
@@ -200,7 +201,7 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<float> t_changes, i
             tot_changes.push_back(avg_bias);//first indicator (of change direction) is biases
         }
         for (int i = 0; i < layers[layerInd - 1].num_neurons; i++) {//all neurons in last layer(weights are emitted)
-            float avg_weight = 0;
+            double avg_weight = 0;
             for (int j = 0; j < layers[layerInd].num_neurons; j++) {//for the individual weight of said neuron
                 for (int k = 0; k < num_changes; k++) {//all data values
                     avg_weight += changes[k].weight_changes[j][i];//add to average (total)
@@ -218,11 +219,11 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<float> t_changes, i
 
 }
 
-Vec3f net::colorGrade(float w){
-    float scalar = (255 / weight_max);//weight_max, being the weight's maximum
-    float color = abs(scalar * w);
-    if(w > 0) return(Vec3f{0, color, 0 });
-    return(Vec3f{ color, 0, 0 });
+Vec3d net::colorGrade(double w){
+    double scalar = (255 / weight_max);//weight_max, being the weight's maximum
+    double color = abs(scalar * w);
+    if(w > 0) return(Vec3d{0, color, 0 });
+    return(Vec3d{ color, 0, 0 });
 }
 
 string net::output(){
@@ -279,7 +280,7 @@ void net::draw()
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
             //gl::color(col[i][j].x, col[i][j].y, col[i][j].z);//hovering colors (FIX)
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {
-                Vec3f ind_col = colorGrade(weights[i][j][k]);//weights
+                Vec3d ind_col = colorGrade(weights[i][j][k]);//weights
                 ofSetColor(int(ind_col.x), int(ind_col.y), int(ind_col.z));//individual colors
                 ofDrawLine(layers[i].n[j].pos.x, layers[i].n[j].pos.y, layers[i + 1].n[k].pos.x, layers[i + 1].n[k].pos.y);
             }

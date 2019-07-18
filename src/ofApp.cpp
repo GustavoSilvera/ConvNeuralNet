@@ -30,11 +30,11 @@ void ofApp::draw(){
     cnn.draw();
     g_avgcost.draw();
     ofSetColor(0, 255, 0);
-    drawFontText(ofGetFrameRate(), Vec2f(corner_fps.x, corner_fps.y));
+    drawFontText(double(ofGetFrameRate()), Vec2d(corner_fps.x, corner_fps.y));
     //drawFontText(n.cost, Vec2f(corner_fps.x, corner_fps.y + 80));
     ofSetColor(255, 255, 255);
-    drawFontText(cnn.avg_cost, Vec2f(corner_fps.x, corner_fps.y + 2 * 80));
-    drawFontText(cnn.network[0].data.size(), Vec2f(corner_fps.x, corner_fps.y + 3 * 80));
+    drawFontText(cnn.avg_cost, Vec2d(corner_fps.x, corner_fps.y + 2 * 80));
+    drawFontText(cnn.network[0].data.size(), Vec2d(corner_fps.x, corner_fps.y + 3 * 80));
 
 
 }
