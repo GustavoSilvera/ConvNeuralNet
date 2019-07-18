@@ -31,7 +31,7 @@ public:
     // Change screen resolution
     int mScreenWidth, mScreenHeight;
     Vec2d corner_fps;
-
+    float init_window_size;
     /*
     void mouseDragged(int x, int y, int button);
     void mousePressed(int x, int y, int button);

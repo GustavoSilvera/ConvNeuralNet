@@ -4,6 +4,7 @@
 void ofApp::setup(){
     //seed random number generator
     srand(time(NULL));
+    init_window_size = float(ofGetWidth());
     cnn.init();
     corner_fps.x = ofGetWidth() - 200;
     corner_fps.y = 0 + 160;
@@ -27,6 +28,9 @@ void ofApp::draw(){
     // clear out the window with black
     const ofColor BLACK{0, 0, 0};
     ofClear ( BLACK );//clear window with black
+    glPushMatrix();
+    float scale = ofGetWidth()/init_window_size;
+    ofScale(scale);
     cnn.draw();
     g_avgcost.draw();
     ofSetColor(0, 255, 0);
@@ -35,7 +39,7 @@ void ofApp::draw(){
     ofSetColor(255, 255, 255);
     drawFontText(cnn.avg_cost, Vec2d(corner_fps.x, corner_fps.y + 2 * 80));
     drawFontText(cnn.network[0].data.size(), Vec2d(corner_fps.x, corner_fps.y + 3 * 80));
-
+    glPopMatrix();
 
 }
 

@@ -282,7 +282,12 @@ void net::draw()
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {
                 Vec3d ind_col = colorGrade(weights[i][j][k]);//weights
                 ofSetColor(int(ind_col.x), int(ind_col.y), int(ind_col.z));//individual colors
-                ofDrawLine(layers[i].n[j].pos.x, layers[i].n[j].pos.y, layers[i + 1].n[k].pos.x, layers[i + 1].n[k].pos.y);
+                ofDrawLine(
+                            float(layers[i].n[j].pos.x),
+                            float(layers[i].n[j].pos.y),
+                            float(layers[i + 1].n[k].pos.x),
+                            float(layers[i + 1].n[k].pos.y)
+                        );
             }
         }
     }
