@@ -32,6 +32,7 @@ public:
     int mScreenWidth, mScreenHeight;
     Vec2f corner_fps;
     float initWidth, initHeight;
+
     /*
     void mouseDragged(int x, int y, int button);
     void mousePressed(int x, int y, int button);

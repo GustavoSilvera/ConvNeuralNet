@@ -12,6 +12,7 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            "src/DATA_good.txt",
             "src/convneuralnet.cpp",
             "src/convneuralnet.h",
             "src/graph.cpp",

@@ -1,6 +1,5 @@
 #include "net.h"
 
-
 void net::init(Vec2f p){
     num_layers = num_neurons.size();
     for (int i = 0; i < num_layers; i++) {
@@ -56,25 +55,28 @@ float net::smooth_RelU(float x){
 void net::read_data(){
 #define MAX_LINE 100
     std::ifstream file("DATA_good.txt");
-    while (!file.eof()) {
-        std::vector<float> ind_data;
-        char line[MAX_LINE];
-        file.getline(line, MAX_LINE);
-        char pos_x[MAX_LINE];
-        char pos_y[MAX_LINE];
-        char pos_z[MAX_LINE];
-        char vel_x[MAX_LINE];
-        char vel_y[MAX_LINE];
-        char vel_z[MAX_LINE];
-        sscanf(line, "%s %s %s %s %s %s", pos_x, pos_y, pos_z, vel_x, vel_y, vel_z );
-        ind_data.push_back(atof(pos_x));
-        ind_data.push_back(atof(pos_y));
-        ind_data.push_back(atof(pos_z));
-        if(output_variable == 0) ind_data.push_back(atof(vel_x));//for X only
-        else if (output_variable == 1) ind_data.push_back(atof(vel_y));//for Y only
-        else ind_data.push_back(atof(vel_z));//for Z only
-        data.push_back(ind_data);
+    if(file.is_open()){
+        while (!file.eof()) {
+            std::vector<float> ind_data;
+            char line[MAX_LINE];
+            file.getline(line, MAX_LINE);
+            char pos_x[MAX_LINE];
+            char pos_y[MAX_LINE];
+            char pos_z[MAX_LINE];
+            char vel_x[MAX_LINE];
+            char vel_y[MAX_LINE];
+            char vel_z[MAX_LINE];
+            sscanf(line, "%s %s %s %s %s %s", pos_x, pos_y, pos_z, vel_x, vel_y, vel_z );
+            ind_data.push_back(atof(pos_x));
+            ind_data.push_back(atof(pos_y));
+            ind_data.push_back(atof(pos_z));
+            if(output_variable == 0) ind_data.push_back(atof(vel_x));//for X only
+            else if (output_variable == 1) ind_data.push_back(atof(vel_y));//for Y only
+            else ind_data.push_back(atof(vel_z));//for Z only
+            data.push_back(ind_data);
+        }
     }
+    else cout << "Unable to open file";
 }
 
 void net::update_layers(){
@@ -219,8 +221,8 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<float> t_changes, i
 Vec3f net::colorGrade(float w){
     float scalar = (255 / weight_max);//weight_max, being the weight's maximum
     float color = abs(scalar * w);
-    if(w > 0) return(Vec3f{0, color/255, 0 });
-    return(Vec3f{ color/255, 0, 0 });
+    if(w > 0) return(Vec3f{0, color, 0 });
+    return(Vec3f{ color, 0, 0 });
 }
 
 string net::output(){
@@ -278,7 +280,7 @@ void net::draw()
             //gl::color(col[i][j].x, col[i][j].y, col[i][j].z);//hovering colors (FIX)
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {
                 Vec3f ind_col = colorGrade(weights[i][j][k]);//weights
-                ofColor(ind_col.x, ind_col.y, ind_col.z);//individual colors
+                ofSetColor(int(ind_col.x), int(ind_col.y), int(ind_col.z));//individual colors
                 ofDrawLine(layers[i].n[j].pos.x, layers[i].n[j].pos.y, layers[i + 1].n[k].pos.x, layers[i + 1].n[k].pos.y);
             }
         }

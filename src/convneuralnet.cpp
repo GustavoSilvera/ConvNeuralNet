@@ -67,7 +67,7 @@ void convneuralnet::draw()
     for (int i = 0; i < num_networks; i++) {
         network[i].draw();
         ideals[i].draw();
-        //drawFontText(network[i].cost, Vec2f(ideals[i].pos.x + 200, ideals[i].pos.y - 30));
-        //drawFontText(network[i].avg_cost, Vec2f(ideals[i].pos.x + 400, ideals[i].pos.y - 30));
+        drawFontText(network[i].cost, Vec2f(ideals[i].pos.x + 200, ideals[i].pos.y - 30));
+        drawFontText(network[i].avg_cost, Vec2f(ideals[i].pos.x + 400, ideals[i].pos.y - 30));
     }
 }

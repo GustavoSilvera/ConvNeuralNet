@@ -3,7 +3,9 @@
 
 #include <math.h>
 #include <fstream>
+
 #include "ofMain.h"//main OF include for everything... placed here bc everything includes util...
+static ofTrueTypeFont font;
 
 static inline float clampf(float min, float max, float i) {
     if (i > min) {
@@ -20,7 +22,6 @@ inline int sgn(float a) {
 inline float sqr(float a) {
     return a * a;
 }
-
 class Vec2f {//3d vector used for everything
 public:
     Vec2f() : x(0), y(0) {}
@@ -93,5 +94,16 @@ public:
         return vec3(clamp(min, max, x), clamp(min, max, y), clamp(min, max, z));
     }
 };
-
+static void renderFont(){
+    font.loadFont("verdana.ttf", 25);//once per setup renderer
+}
+static void drawFontText(float text, Vec2f pos) {
+    if(!font.isLoaded()) renderFont();
+    std::stringstream dummyText;
+    std::string PRINT;
+    dummyText << text;
+    dummyText >> PRINT;
+    pos.x += 50;
+    font.drawString(PRINT, pos.x, pos.y);
+}
 #endif // UTIL_H

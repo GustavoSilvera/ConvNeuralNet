@@ -23,8 +23,8 @@ void graph::draw() {
     resize();
     const int num_data = data.size();
     rescale();
-    //drawFontText(axis_scale.y, Vec2f(origin.x, origin.y - dimens.y));
-    //drawFontText(axis_scale.x, Vec2f(origin.x + dimens.x, origin.y));
+    drawFontText(axis_scale.y, Vec2f(origin.x, origin.y - dimens.y));
+    drawFontText(axis_scale.x, Vec2f(origin.x + dimens.x, origin.y));
     ofColor(1, 1, 0);//yeller
     const Vec2f scale = { dimens.x / axis_scale.x , dimens.y / axis_scale.y };
     ofFill();
@@ -33,6 +33,6 @@ void graph::draw() {
         const int size = 2;
         ofDrawCircle(centre.x, centre.y, size);
     }
-    //if(num_data > 1) drawFontText(data[num_data - 1], Vec2f(origin.x + scale.x * num_data, origin.y - scale.y * data[num_data - 1]));
+    if(num_data > 1) drawFontText(data[num_data - 1], Vec2f(origin.x + scale.x * num_data, origin.y - scale.y * data[num_data - 1]));
     ofColor(1, 1, 1);
 }
