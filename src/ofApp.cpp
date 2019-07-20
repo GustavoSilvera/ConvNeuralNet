@@ -4,11 +4,14 @@
 void ofApp::setup(){
     //seed random number generator
     srand(time(NULL));
-    init_window_size = float(ofGetWidth());
+    init_window_x = new_window_x = float(ofGetWidth());
+    init_window_y = new_window_y = float(ofGetHeight());
     cnn.init();
-    corner_fps.x = ofGetWidth() - 200;
+    corner_fps.x = ofGetWidth() - 300;
     corner_fps.y = 0 + 160;
     renderFont();
+    // clear out the window with black
+    ofSetBackgroundColor(0, 0, 0);
 }
 
 //--------------------------------------------------------------
@@ -25,20 +28,18 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // clear out the window with black
-    const ofColor BLACK{0, 0, 0};
-    ofClear ( BLACK );//clear window with black
     glPushMatrix();
-    float scale = ofGetWidth()/init_window_size;
-    ofScale(scale);
+    float scale_x = new_window_x/init_window_x;
+    float scale_y = new_window_y/init_window_y;
+    ofScale(scale_x, scale_y);
     cnn.draw();
     g_avgcost.draw();
     ofSetColor(0, 255, 0);
-    drawFontText(double(ofGetFrameRate()), Vec2d(corner_fps.x, corner_fps.y));
+    drawFontText(double(ofGetFrameRate()), vec2(corner_fps.x, corner_fps.y));
     //drawFontText(n.cost, Vec2f(corner_fps.x, corner_fps.y + 80));
     ofSetColor(255, 255, 255);
-    drawFontText(cnn.avg_cost, Vec2d(corner_fps.x, corner_fps.y + 2 * 80));
-    drawFontText(cnn.network[0].data.size(), Vec2d(corner_fps.x, corner_fps.y + 3 * 80));
+    drawFontText(cnn.avg_cost, vec2(corner_fps.x, corner_fps.y + 2 * 80));
+    drawFontText(cnn.network[0].data.size(), vec2(corner_fps.x, corner_fps.y + 3 * 80));
     glPopMatrix();
 
 }
@@ -64,7 +65,11 @@ void ofApp::keyPressed(int key){
         OF_EXIT_APP(0);
     }
 }
-
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+    new_window_x = w;
+    new_window_y = h;
+}
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 
@@ -101,9 +106,6 @@ void ofApp::mouseExited(int x, int y){
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
-
-}
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){

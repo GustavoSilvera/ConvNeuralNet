@@ -5,14 +5,14 @@
 
 class graph {
 private:
-    Vec2d origin;
+    vec2 origin;
     std::vector<double> data;
-    Vec2d dimens{500, 200};//500px wide, 200px tall
-    Vec2d axis_scale{100, 100};
+    vec2 dimens{500, 200};//500px wide, 200px tall
+    vec2 axis_scale{100, 100};
     void rescale();
     void resize();
 public:
-    graph(Vec2d o) : origin(o) {}
+    graph(vec2 o) : origin(o) {}
     void add_data(double a);
     void draw();
 };

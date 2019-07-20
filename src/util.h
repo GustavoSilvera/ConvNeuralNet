@@ -6,7 +6,7 @@
 
 #include "ofMain.h"//main OF include for everything... placed here bc everything includes util...
 static ofTrueTypeFont font;
-
+using namespace glm;
 static inline double clampd(double min, double max, double i) {
     if (i > min) {
         if (i < max) return i;
@@ -22,6 +22,7 @@ inline int sgn(double a) {
 inline double sqr(double a) {
     return a * a;
 }
+/*
 class Vec2d {//3d vector used for everything
 public:
     Vec2d() : x(0), y(0) {}
@@ -93,11 +94,11 @@ public:
     vec3 clamp(T min, T max) {
         return vec3(clamp(min, max, x), clamp(min, max, y), clamp(min, max, z));
     }
-};
+};*/
 static void renderFont(){
     font.loadFont("verdana.ttf", 25);//once per setup renderer
 }
-static void drawFontText(double text, Vec2d pos) {
+static void drawFontText(double text, vec2 pos) {
     if(!font.isLoaded()) renderFont();
     std::stringstream dummyText;
     std::string PRINT;

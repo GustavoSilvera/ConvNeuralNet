@@ -27,7 +27,7 @@ public:
     int num_errors = 1;
     vector<int> num_neurons;
     vector<layer> layers;
-    vector<vector<Vec3d>> col;//colors of specific node groups
+    vector<vector<vec3>> col;//colors of specific node groups
     vector<vector<vector<double>>> weights;//weights from ind. neurons to all neurons in next layer
     vector<vector<vector<double>>> weight_changes;
     vector<vector<double>> bias;//individual neurons's biases
@@ -36,7 +36,7 @@ public:
     bool training = false;
     double cost = 0, total_cost = 0, avg_cost = 0;
     const int diff = 300;//300 pixel intervals
-    void init(Vec2d p);
+    void init(vec2 p);
     double sigmoid(double x);
     double smooth_RelU(double x);
     void read_data();
@@ -51,7 +51,7 @@ public:
     };
     total_changes improve(int i, layer* ideal, vector<double> t_changes);
     void avg_improve(layer* ideal, layer* rel_ideal, vector<double> t_changes, int layerInd = 0);
-    Vec3d colorGrade(double w);
+    vec3 colorGrade(double w);
     string output();
     void draw();
 };

@@ -1,18 +1,18 @@
 #include "net.h"
 
-void net::init(Vec2d p){
+void net::init(vec2 p){
     num_layers = num_neurons.size();
     for (int i = 0; i < num_layers; i++) {
-        Vec2d layerPos{ p.x + diff * (i + 0.5), p.y };
+        vec2 layerPos{ p.x + diff * (i + 0.5), p.y };
         layers.push_back(layer{ num_neurons[i], layerPos });
     }
     read_data();
     //hovering colors
     for (int i = 0; i < num_layers; i++) {
         layers[i].init();//init all the layers
-        std::vector<Vec3d> ind_col;//individual colors
+        std::vector<vec3> ind_col;//individual colors
         for (int j = 0; j < layers[i].num_neurons; j++) {
-            ind_col.push_back(Vec3d{ 1, 1, 1 });//every node group's colour is initially white
+            ind_col.push_back(vec3{ 1, 1, 1 });//every node group's colour is initially white
         }
         col.push_back(ind_col);
     }
@@ -219,11 +219,11 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, 
 
 }
 
-Vec3d net::colorGrade(double w){
+vec3 net::colorGrade(double w){
     double scalar = (255 / weight_max);//weight_max, being the weight's maximum
     double color = abs(scalar * w);
-    if(w > 0) return(Vec3d{0, color, 0 });
-    return(Vec3d{ color, 0, 0 });
+    if(w > 0) return(vec3{0, color, 0 });
+    return(vec3{ color, 0, 0 });
 }
 
 string net::output(){
@@ -280,7 +280,7 @@ void net::draw()
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
             //gl::color(col[i][j].x, col[i][j].y, col[i][j].z);//hovering colors (FIX)
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {
-                Vec3d ind_col = colorGrade(weights[i][j][k]);//weights
+                vec3 ind_col = colorGrade(weights[i][j][k]);//weights
                 ofSetColor(int(ind_col.x), int(ind_col.y), int(ind_col.z));//individual colors
                 ofDrawLine(
                             float(layers[i].n[j].pos.x),
