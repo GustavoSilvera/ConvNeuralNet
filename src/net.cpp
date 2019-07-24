@@ -158,14 +158,14 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
         for (int j = 0; j < layers[i].num_neurons; j++) {
             double sum = 0;
             for (int k = 0; k < t_changes.size(); k++) {
-                sum -= weights[i][j][k] * t_changes[k];//adds up all the WEIGHTED changes from the next layer
+                sum += weights[i][j][k] * t_changes[k];//adds up all the WEIGHTED changes from the next layer
             }
-            changes.push_back(sum);//WORKING
+            changes.push_back(sum/t_changes.size());//average total direction change over t_changes
         }
     }
     for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
         //compare neuron[i] to ideal_neuron[i];
-        const double step = 0.01;
+        const double step = 0.001;
         double bias_change = step * changes[j];
         std::vector<double> ind_mods;
         //increase weight if its neuron is positive, decrease if negative;

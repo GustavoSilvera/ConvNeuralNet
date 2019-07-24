@@ -17,7 +17,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     //n.update_layers();//always recalculating new layer neuron values
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 10; i++) {
         if (cnn.training) {
             cnn.avg_improve();
             g_avgcost.add_data(cnn.avg_cost);
