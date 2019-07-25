@@ -17,7 +17,12 @@ void layer::update_pos(vec2 p){
         n.push_back(neuron((rand() % 100) / 100.0, vec2(p.x, yPos)));//random weights for now
     }
 }
-
+void layer::update_value(std::vector<double> values, std::vector<double> biases){
+    for (int i = 0; i < num_neurons; i++) {
+        n[i].val = values[i];//random weights for now
+        n[i].border_color(biases[i]);
+    }
+}
 void layer::update_value(std::vector<double> values){
     for (int i = 0; i < num_neurons; i++) {
         n[i].val = values[i];//random weights for now

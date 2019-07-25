@@ -12,11 +12,12 @@ using namespace std;
 class ofApp : public ofBaseApp{
 public:
     ofApp() :
-            n_x(0, { 3, 4, 1 }, false, 1),//for X: n{3, 4, 1} w/ smooth_relU, weight_max = 1, thus: avg_cost ~ 11
-            n_y(1, { 3, 3, 1 }, false, 1),//for Y: n{3, 1} w/ smooth_relU, weight_max = 1, thus: avg_cost ~ 30
+            n_x(0, { 3, 5, 1 }, false, 1),//for X: n{3, 4, 1} w/ smooth_relU, weight_max = 1, thus: avg_cost ~ 11
+            n_y(1, { 3, 7, 1 }, false, 1),//for Y: n{3, 3, 1} w/ smooth_relU, weight_max = 1, thus: avg_cost ~ 30
             n_z(2, { 3, 4, 1 }, true, 1),//for Z: n{3, 4, 1} w/ sigmoid, weight_max = 1, thus: avg_cost ~ 6
             //cnn( {n_x, n_y, n_z} ),//builds the cnn using the previous nets
-            g_avgcost(vec2{ 1200, 1200 })
+            g_avgcost(vec2{ 1200, 1200 }),
+            g_marginalcost(vec2{ 1200, 1450 }, 0.001)
         {}
     void setup();
     void update();
@@ -29,7 +30,7 @@ public:
     net n_x, n_y, n_z;
     convneuralnet cnn{ { n_x, n_y, n_z } };
     int line = 0;
-    graph g_avgcost;
+    graph g_avgcost, g_marginalcost;
     // Change screen resolution
     int mScreenWidth, mScreenHeight;
     vec2 corner_fps;

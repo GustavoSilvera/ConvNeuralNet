@@ -18,6 +18,7 @@ public:
     const double scale = 2.5;
     void init();
     void update_pos(vec2 p);
+    void update_value(std::vector<double> values, std::vector<double> biases);
     void update_value(std::vector<double> values);
     void draw();
 };

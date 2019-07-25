@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     //seed random number generator
-    srand(time(NULL));
+    std::srand(std::time(nullptr)); // use current time as seed for random generator
     init_window_x = new_window_x = float(ofGetWidth());
     init_window_y = new_window_y = float(ofGetHeight());
     cnn.init();
@@ -21,6 +21,7 @@ void ofApp::update(){
         if (cnn.training) {
             cnn.avg_improve();
             g_avgcost.add_data(cnn.avg_cost);
+            if(cnn.last_cost > 0) g_marginalcost.add_data(cnn.last_cost - cnn.avg_cost);//marginal (difference) cost
             if (cnn.avg_cost < 1) cnn.training = false;
         }
     }
@@ -34,6 +35,7 @@ void ofApp::draw(){
     ofScale(scale_x, scale_y);
     cnn.draw();
     g_avgcost.draw();
+    g_marginalcost.draw();
     ofSetColor(0, 255, 0);
     drawFontText(double(ofGetFrameRate()), vec2(corner_fps.x, corner_fps.y));
     //drawFontText(n.cost, Vec2f(corner_fps.x, corner_fps.y + 80));

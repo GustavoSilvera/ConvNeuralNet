@@ -22,6 +22,11 @@ inline int sgn(double a) {
 inline double sqr(double a) {
     return a * a;
 }
+inline double randfrom(double range, int decimals = 2){
+    double tens_place = pow(10, decimals);
+    int rand_max = int(2 * tens_place * range);//n decimal places (pos/neg from range)
+    return (((rand() % rand_max ) / tens_place ) - range);//new random weight from -range to range
+}
 /*
 class Vec2d {//3d vector used for everything
 public:

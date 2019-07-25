@@ -96,7 +96,7 @@ void net::update_layers(){
                 new_values.push_back(weighted_sum + bias[i - 1][j]);//no sigmoid on last layer (needs to be outputs)
             }
         }
-        layers[i].update_value(new_values);
+        layers[i].update_value(new_values, bias[i-1]);//bias[0] corresponds to layers[1] & so on
     }
 }
 void net::comp_avg_cost(layer *opt){
@@ -137,9 +137,8 @@ void net::randomize_weights(){
     for (int i = 0; i < num_layers - 1; i++) {//for every layer (except last one)
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
             for (int k = 0; k < layers[i + 1].num_neurons; k++) {//for every weight its attached to
-                int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
-                weights[i][j][k] = ((rand() % rand_max ) / 100.0) - weight_max;//new random from -4 to 4
-                bias[i][k] = 0;//reset biases
+                weights[i][j][k] = randfrom(weight_max, 2);//new random weight from -4 to 4
+                bias[i][k] = randfrom(weight_max, 2);//random biases from -4 to 4
             }
         }
     }
@@ -170,7 +169,7 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
         std::vector<double> ind_mods;
         //increase weight if its neuron is positive, decrease if negative;
         for (int k = 0; k < layers[i-1].num_neurons; k++) {//for every (behind)weight its attached to
-            double weight_change = step * sgn(changes[j]) * (layers[i-1].n[k].val);
+            double weight_change = step * changes[j] * (layers[i-1].n[k].val);//proportional difference to the direction of change and neuron value
             //weights[i - 1][k][j] += weight_change;//change weights proportoinal to the error
             ind_mods.push_back(weight_change);
         }

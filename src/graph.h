@@ -5,14 +5,16 @@
 
 class graph {
 private:
-    vec2 origin;
+    dvec2 origin;
     std::vector<double> data;
-    vec2 dimens{500, 200};//500px wide, 200px tall
-    vec2 axis_scale{100, 100};
+    dvec2 dimens{500, 200};//500px wide, 200px tall
+    dvec2 axis_scale{100, 100};
     void rescale();
     void resize();
+    double minimum = 100;
 public:
-    graph(vec2 o) : origin(o) {}
+    graph(dvec2 o) : origin(o) {}
+    graph(dvec2 o, double min) : origin(o), minimum(min) {}
     void add_data(double a);
     void draw();
 };

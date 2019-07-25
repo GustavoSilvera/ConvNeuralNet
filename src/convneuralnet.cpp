@@ -36,6 +36,7 @@ void convneuralnet::randomize_weights(){
 }
 
 void convneuralnet::comp_avg_cost(){
+    last_cost = avg_cost;
     avg_cost = 0;
     for (int i = 0; i < num_networks; i++) {
         network[i].comp_avg_cost(&ideals[i]);

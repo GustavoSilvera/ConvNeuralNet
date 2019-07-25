@@ -12,7 +12,7 @@ public:
     std::vector<layer> ideals;
     int num_networks;
     double y_scale;
-    double avg_cost;
+    double avg_cost, last_cost;//last_cost used to compute marginal
     bool training = false;
     void init();
     void new_data(int line);
