@@ -143,7 +143,6 @@ void net::randomize_weights(){
         }
     }
 }
-
 net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
     //for (int i = num_layers - 1; i > 1; i--) {//for every layer (except first one) (starting from end\output)
     total_changes t;
@@ -164,7 +163,7 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
     }
     for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
         //compare neuron[i] to ideal_neuron[i];
-        const double step = 0.001;
+        const double step = 0.01;
         double bias_change = step * changes[j];
         std::vector<double> ind_mods;
         //increase weight if its neuron is positive, decrease if negative;

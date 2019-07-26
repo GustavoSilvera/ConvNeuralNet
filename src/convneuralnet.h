@@ -15,6 +15,7 @@ public:
     double avg_cost, last_cost;//last_cost used to compute marginal
     bool training = false;
     void init();
+    //void update_pos(int x, int y);
     void new_data(int line);
     void randomize_weights();
     void comp_avg_cost();

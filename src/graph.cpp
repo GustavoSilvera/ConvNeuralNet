@@ -11,9 +11,13 @@ double average(std::vector<double> set){
 }
 void graph::rescale() {
     if (data.size() > 0) {
-        axis_scale.y = clampd(minimum, 1e10, 1.5*data[data.size()/2]);//average(data);//clampd(100, 100000, double(*max_element(data.begin(), data.end())));//finds highest value
+        axis_scale.y = clampd(minimum, 1e10, 2*data[data.size()]);//average(data);//clampd(100, 100000, double(*max_element(data.begin(), data.end())));//finds highest value
         axis_scale.x = data.size();
     }
+}
+void graph::update_pos(int x, int y){
+    origin.x = x;
+    origin.y = y;
 }
 void graph::resize() {
     while (data.size() > 200) {

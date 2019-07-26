@@ -16,6 +16,7 @@ public:
     graph(dvec2 o) : origin(o) {}
     graph(dvec2 o, double min) : origin(o), minimum(min) {}
     void add_data(double a);
+    void update_pos(int x, int y);
     void draw();
 };
 

@@ -30,9 +30,9 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     glPushMatrix();
-    float scale_x = new_window_x/init_window_x;
+    /*float scale_x = new_window_x/init_window_x;
     float scale_y = new_window_y/init_window_y;
-    ofScale(scale_x, scale_y);
+    ofScale(scale_x, scale_y);*/
     cnn.draw();
     g_avgcost.draw();
     g_marginalcost.draw();
@@ -56,6 +56,7 @@ void ofApp::keyPressed(int key){
     if (key == OF_KEY_BACKSPACE) {//computes total average cost
         //cnn.comp_avg_cost();//computes total average cost of the entire CONVOLUTIONAL NN
         cnn.output();
+        //cnn.slight_push(0.1);//slight push in random dir for all the weights/biases (to kick net out of stagnation)
     }
     if (key == OF_KEY_SHIFT) {//begins the training
         cnn.training = !cnn.training;
@@ -71,6 +72,10 @@ void ofApp::keyPressed(int key){
 void ofApp::windowResized(int w, int h){
     new_window_x = w;
     new_window_y = h;
+    corner_fps.x = w - 300;
+    g_avgcost.update_pos(w - 800, h - 300);
+    g_marginalcost.update_pos(w - 800, h - 50);
+    //cnn.update_pos(w, h);
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
