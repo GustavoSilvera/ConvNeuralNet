@@ -69,6 +69,7 @@ void convneuralnet::avg_improve(){
     }
         //std::thread top (network[0].avg_improve, &ideals[0], &ideals[0], v);
     /*for (int i = 0; i < num_networks; i++) {
+       std::vector<double> v;
        network[i].avg_improve(&ideals[i], &ideals[i], v);
     }*/
     comp_avg_cost();

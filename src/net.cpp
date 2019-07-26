@@ -3,7 +3,7 @@
 void net::init(vec2 p){
     num_layers = num_neurons.size();
     for (int i = 0; i < num_layers; i++) {
-        vec2 layerPos{ p.x + diff * (i + 0.5), p.y };
+        dvec2 layerPos{ double(p.x) + diff * (i + 0.5), p.y };
         layers.push_back(layer{ num_neurons[i], layerPos });
     }
     read_data();
@@ -51,11 +51,10 @@ double net::smooth_RelU(double x){
     return (0.4337151304 * x + 0.0058131963);
 }
 
-const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/neuralNet/";
-
+const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/";
 void net::read_data(){
 #define MAX_LINE 100
-    std::ifstream file(kRootDir + "src/DATA_good.txt");
+    std::ifstream file(kRootDir + "neuralNet/src/DATA_good.txt");
     if(file.is_open()){
         while (!file.eof()) {
             std::vector<double> ind_data;
@@ -163,7 +162,7 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
     }
     for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
         //compare neuron[i] to ideal_neuron[i];
-        const double step = 0.01;
+        const double step = 0.001;
         double bias_change = step * changes[j];
         std::vector<double> ind_mods;
         //increase weight if its neuron is positive, decrease if negative;
@@ -199,8 +198,8 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, 
             tot_changes.push_back(avg_bias);//first indicator (of change direction) is biases
         }
         for (int i = 0; i < layers[layerInd - 1].num_neurons; i++) {//all neurons in last layer(weights are emitted)
-            double avg_weight = 0;
             for (int j = 0; j < layers[layerInd].num_neurons; j++) {//for the individual weight of said neuron
+                double avg_weight = 0;
                 for (int k = 0; k < num_changes; k++) {//all data values
                     avg_weight += changes[k].weight_changes[j][i];//add to average (total)
                 }
@@ -214,7 +213,6 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, 
         avg_improve(&layers[layerInd], rel_ideal, tot_changes, layerInd - 1);
     }
     else comp_avg_cost(rel_ideal);//computes total average cost of thee entire net
-
 }
 
 vec3 net::colorGrade(double w){

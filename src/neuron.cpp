@@ -2,7 +2,7 @@
 
 
 void neuron::border_color(double value){//updates rim around neurons based on biases
-    double scalar = (1000);//bias_max, being the bias's maximum
+    double scalar = (255);//bias_max, being the bias's maximum
     double color = abs(scalar * value);
     if(value > 0) col = (vec3{0, color, 0 });
     else col = (vec3{ color, 0, 0 });
