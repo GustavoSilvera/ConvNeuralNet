@@ -22,7 +22,6 @@ void convneuralnet::init(){
         //update last layer's position to be all in front of ideals
         network[i].layers[last_indx].update_pos(vec2{ p.x - 200, p.y });
         network[i].layers[0].update_pos(vec2{ pos.x, y_scale * (num_networks / 2.0) });
-
     }
 }
 

@@ -54,7 +54,7 @@ double net::smooth_RelU(double x){
 const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/";
 void net::read_data(){
 #define MAX_LINE 100
-    std::ifstream file(kRootDir + "neuralNet/src/DATA_good.txt");
+    std::ifstream file("../src/DATA_good.txt");//using CWD
     if(file.is_open()){
         while (!file.eof()) {
             std::vector<double> ind_data;
@@ -66,7 +66,7 @@ void net::read_data(){
             char vel_x[MAX_LINE];
             char vel_y[MAX_LINE];
             char vel_z[MAX_LINE];
-            sscanf(line, "%s %s %s %s %s %s", pos_x, pos_y, pos_z, vel_x, vel_y, vel_z );
+            sscanf(line, "%s %s %s ; %s %s %s", pos_x, pos_y, pos_z, vel_x, vel_y, vel_z );
             ind_data.push_back(atof(pos_x));
             ind_data.push_back(atof(pos_y));
             ind_data.push_back(atof(pos_z));

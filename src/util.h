@@ -101,7 +101,7 @@ public:
     }
 };*/
 static void renderFont(){
-    font.loadFont("verdana.ttf", 25);//once per setup renderer
+    font.load("verdana.ttf", 25);//once per setup renderer
 }
 static void drawFontText(double text, vec2 pos) {
     if(!font.isLoaded()) renderFont();
