@@ -50,8 +50,7 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     #define OF_KEY_SPACE 32//OF dosent have it... :/
     if (key == OF_KEY_SPACE) {//refreshed (new) model
-        cnn.new_data(line);//only first line
-        line++;
+        cnn.new_data();//only first line
     }
     if (key == OF_KEY_BACKSPACE) {//computes total average cost
         //cnn.comp_avg_cost();//computes total average cost of the entire CONVOLUTIONAL NN

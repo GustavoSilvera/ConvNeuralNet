@@ -1,12 +1,13 @@
 #include "net.h"
 
-void net::init(vec2 p){
+void net::init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs){
     num_layers = num_neurons.size();
     for (int i = 0; i < num_layers; i++) {
         dvec2 layerPos{ double(p.x) + diff * (i + 0.5), p.y };
         layers.push_back(layer{ num_neurons[i], layerPos });
     }
-    read_data();
+    total_data_lines = int(total_data.size());
+    extract_data(total_data, num_inputs);
     //hovering colors
     for (int i = 0; i < num_layers; i++) {
         layers[i].init();//init all the layers
@@ -39,7 +40,20 @@ void net::init(vec2 p){
         bias.push_back(ind_biases);
     }
 }
-
+void net::extract_data(std::vector<std::vector<double>> total_data, std::vector<int> num_inputs){
+    for(int i = 0; i < total_data_lines; i++){
+        std::vector<double> ind_line_data;
+        for(int j = 0; j < num_inputs[i]; j++){//num_inputs[i] has index for all data (lines') individual num_inputs (should all be same)
+            ind_line_data.push_back(total_data[i][j]);
+        }
+        for(int j = num_inputs[i]; j < total_data[j].size(); j++){//scans through all (OUTPUT) elements in total_data set
+            if(j - num_inputs[i] == focus_variable){//should only happen once
+                ind_line_data.push_back(total_data[i][j]);//adds respective "focus" variable
+            }
+        }
+        data.push_back(ind_line_data);
+    }
+}
 double net::sigmoid(double x){
     const double e = 2.71828182846;
     return(1 / (1 + pow(e, -x)));
@@ -48,36 +62,9 @@ double net::sigmoid(double x){
 double net::smooth_RelU(double x){
     //const double e = 2.71828182846;
     if(x<5)	return log10(1 + exp(x));
-    return (0.4337151304 * x + 0.0058131963);
+    return (0.4337151304 * x + 0.0058131963);//linear approx
 }
 
-const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/";
-void net::read_data(){
-#define MAX_LINE 100
-    std::ifstream file("../src/DATA_good.txt");//using CWD
-    if(file.is_open()){
-        while (!file.eof()) {
-            std::vector<double> ind_data;
-            char line[MAX_LINE];
-            file.getline(line, MAX_LINE);
-            char pos_x[MAX_LINE];
-            char pos_y[MAX_LINE];
-            char pos_z[MAX_LINE];
-            char vel_x[MAX_LINE];
-            char vel_y[MAX_LINE];
-            char vel_z[MAX_LINE];
-            sscanf(line, "%s %s %s ; %s %s %s", pos_x, pos_y, pos_z, vel_x, vel_y, vel_z );
-            ind_data.push_back(atof(pos_x));
-            ind_data.push_back(atof(pos_y));
-            ind_data.push_back(atof(pos_z));
-            if(output_variable == 0) ind_data.push_back(atof(vel_x));//for X only
-            else if (output_variable == 1) ind_data.push_back(atof(vel_y));//for Y only
-            else ind_data.push_back(atof(vel_z));//for Z only
-            data.push_back(ind_data);
-        }
-    }
-    else cout << "Unable to open file" << std::getenv("CWD");
-}
 
 void net::update_layers(){
     for (int i = 1; i < num_layers; i++) {//only the next layers (last ones)
@@ -101,25 +88,27 @@ void net::update_layers(){
 void net::comp_avg_cost(layer *opt){
     total_cost = 0;//reset's cost
     num_errors = 1;
-    for (int line = 0; line < data.size(); line++) {
-        new_data(line, opt);
+    for (int line = 0; line < total_data_lines; line++) {
+        new_data(opt);
     }
 }
 
-void net::new_data(int line, layer *optimal){
+void net::new_data(layer *optimal){
+    if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
     std::vector<double> new_inputs;
-    for (int i = 0; i < layers[0].num_neurons; i++) {
-        new_inputs.push_back(data[line][i]);
+    for (int i = 0; i < layers[0].num_neurons; i++) {//first .num_neuron elements in data[] is inputs
+        new_inputs.push_back(data[data_line][i]);
     }
     layers[0].update_value(new_inputs);//first (input) layer is first updates
     std::vector<double> new_outputs;
-    for (int i = layers[0].num_neurons; i < data[line].size(); i++) {//starting where last loop left off
-        new_outputs.push_back(data[line][i]);
+    for (int i = layers[0].num_neurons; i < data[data_line].size(); i++) {//starting where last loop left off
+        new_outputs.push_back(data[data_line][i]);
     }
     optimal->update_value(new_outputs);//optimal (the "should be" output) layer is second
     cost = compute_cost(optimal);
     total_cost += cost;
     num_errors++;
+    data_line++;//next line (next time)
     avg_cost = total_cost / num_errors;
 }
 
@@ -185,7 +174,7 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, 
         std::vector<total_changes> changes;
         const int num_changes = data.size();//total number of data sets (lines)
         for (int line = 0; line < num_changes; line++) {//obtain all the desired modifications from every data set
-            new_data(line, rel_ideal);
+            new_data(rel_ideal);
             changes.push_back(improve(layerInd, ideal, t_changes));
         }
         for (int i = 0; i < layers[layerInd].num_neurons; i++) {//all neurons
@@ -224,7 +213,7 @@ vec3 net::colorGrade(double w){
 
 string net::output(){
     string ret;
-    ret.append("//Data: " + std::to_string(output_variable));
+    ret.append("//Data: " + std::to_string(focus_variable));
     ret.append("; Using: ");
     if (usingSigmoid) ret.append("Sigmoid; ");
     else ret.append("RelU; ");
@@ -236,7 +225,7 @@ string net::output(){
     }
     ret.append("}; \n");
     //print all weights
-    ret.append("weights[" + std::to_string(output_variable) + "] = {\n");//open layer
+    ret.append("weights[" + std::to_string(focus_variable) + "] = {\n");//open layer
     for (int i = 0; i < num_layers - 1; i++) {
         ret.append("   {\n");//open layer
         for (int j = 0; j < layers[i].num_neurons; j++) {
@@ -253,7 +242,7 @@ string net::output(){
     }
     ret.append("};\n");
     //print all the biases
-    ret.append("biases[" + std::to_string(output_variable) + "] = {\n");//open layer
+    ret.append("biases[" + std::to_string(focus_variable) + "] = {\n");//open layer
     for (int i = 0; i < num_layers - 1; i++) {
         ret.append("   {");//open layer
         for (int j = 0; j < layers[i+1].num_neurons; j++) {

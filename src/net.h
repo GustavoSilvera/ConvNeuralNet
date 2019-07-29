@@ -8,8 +8,8 @@ using namespace std;
 
 class net {
 public:
-    net(int op_var, vector<int> network, bool sig, int w_max)  {
-        output_variable = op_var;
+    net(int focus_var, vector<int> network, bool sig, int w_max)  {
+        focus_variable = focus_var;
         usingSigmoid = sig;
         weight_max = w_max;
         for (int i = 0; i < network.size(); i++) {
@@ -19,7 +19,7 @@ public:
 
     }
     //CNN stuff
-    int output_variable;
+    int focus_variable;
     bool usingSigmoid;
     double weight_max;
     //rest of stuff
@@ -36,13 +36,15 @@ public:
     bool training = false;
     double cost = 0, total_cost = 0, avg_cost = 0;
     const int diff = 300;//300 pixel intervals
-    void init(vec2 p);
+    void init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
+    int total_data_lines;
+    int data_line = 0;
+    void extract_data(std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
     double sigmoid(double x);
     double smooth_RelU(double x);
-    void read_data();
     void update_layers();
     void comp_avg_cost(layer* opt);
-    void new_data(int line, layer* optimal);
+    void new_data(layer* optimal);
     double compute_cost(layer* optimal);
     void randomize_weights();
     struct total_changes {

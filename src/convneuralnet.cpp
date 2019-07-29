@@ -8,9 +8,10 @@ void convneuralnet::init(){
     for (int i = 0; i < num_networks; i++) {
         if (network[i].num_layers >= largest_num_layers) largest_num_layers = network[i].num_layers;
     }//simply finds the num_layers of the largest neural net
+    read_data();
     for (int i = 0; i < num_networks; i++) {
         vec2 pos{ 100, y_scale * (i + 0.5) };//init x = 100, (i+0.5) to not start top neural net at VERY top of window
-        network[i].init(pos);//create network[i]
+        network[i].init(pos, total_data, num_inputs);//create network[i]
         const int last_indx = network[i].num_layers - 1;//index of final layer (layers.size() - 1)
         layer last = network[i].layers[last_indx];//copy the last (output) layer of the network
         vec2 p{
@@ -24,10 +25,50 @@ void convneuralnet::init(){
         network[i].layers[0].update_pos(vec2{ pos.x, y_scale * (num_networks / 2.0) });
     }
 }
-
-void convneuralnet::new_data(int line){
+const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/";
+void convneuralnet::read_data(){
+#define MAX_LINE 100
+    std::ifstream file("../src/DATA_good.txt");//using CWD
+    std::ifstream file2("../src/DATA_good.txt");//need this to find "file_length" bc the istreambuf iterator DELETES the file after reading??
+    int file_length = int(std::count(std::istreambuf_iterator<char>(file2),std::istreambuf_iterator<char>(), '\n'));//gets number of '\n' in the file
+    if(file.is_open()){
+        int line_num = 0;
+        while (line_num < file_length) {
+            char line[MAX_LINE];//default line (less than 100 chars)
+            file.getline(line, MAX_LINE);
+            std::vector<double> ind_data;
+            std::string sline = line;
+            int end_inputs = sline.find(';');//has to be recomputed every time (strings are diff)
+            int end_outputs = sline.size();
+            int i = 0;
+            num_inputs.push_back(0);//initialize num_inputs[line_num]
+            num_outputs.push_back(0);//initialize num_outputs[line_num]
+            while(sline.find(' ', i) < end_inputs){
+                int next_space = sline.find(' ', i);//finds next instance of " " from index i
+                string datum = sline.substr(i, next_space);
+                ind_data.push_back(stod(datum));//adds all inputs to ind_data
+                num_inputs[line_num]++;
+                i = next_space + 1;//not get inf loop finding same index
+            }
+            i = end_inputs + 2;//refresh i with new start
+            while(i < end_outputs){//space is IN FRONT of datum now... -_-
+                int next_space = sline.find(' ', i);//finds next instance of " " from index i
+                if(next_space == std::string::npos) next_space = end_outputs;//end of line
+                string datum = sline.substr(i, next_space);
+                ind_data.push_back(stod(datum));//adds all outputs to ind_data
+                num_outputs[line_num]++;
+                i = next_space+1;//not get inf loop finding same index
+            }
+            line_num++;
+            total_data.push_back(ind_data);
+        }
+    }
+    else cout << "Unable to open file" << std::getenv("CWD");
+    file.close();
+}
+void convneuralnet::new_data(){
     for (int i = 0; i < num_networks; i++) {
-        network[i].new_data(line, &ideals[i]);
+        network[i].new_data(&ideals[i]);
     }
 }
 
