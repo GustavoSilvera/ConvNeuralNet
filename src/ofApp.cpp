@@ -6,7 +6,6 @@ void ofApp::setup(){
     std::srand(std::time(nullptr)); // use current time as seed for random generator
     init_window_x = new_window_x = float(ofGetWidth());
     init_window_y = new_window_y = float(ofGetHeight());
-    cnn.init();
     corner_fps.x = ofGetWidth() - 300;
     corner_fps.y = 0 + 160;
     renderFont();

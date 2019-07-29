@@ -8,7 +8,6 @@ void convneuralnet::init(){
     for (int i = 0; i < num_networks; i++) {
         if (network[i].num_layers >= largest_num_layers) largest_num_layers = network[i].num_layers;
     }//simply finds the num_layers of the largest neural net
-    read_data();
     for (int i = 0; i < num_networks; i++) {
         vec2 pos{ 100, y_scale * (i + 0.5) };//init x = 100, (i+0.5) to not start top neural net at VERY top of window
         network[i].init(pos, total_data, num_inputs);//create network[i]

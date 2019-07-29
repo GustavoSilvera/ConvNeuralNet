@@ -30,8 +30,7 @@ public:
     void windowResized(int w, int h);
 
     net n_x, n_y, n_z;
-    convneuralnet cnn{ { n_x, n_y, n_z} };
-    int line = 0;
+    convneuralnet cnn;
     graph g_avgcost, g_marginalcost;
     // Change screen resolution
     int mScreenWidth, mScreenHeight;
