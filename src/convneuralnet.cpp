@@ -1,7 +1,5 @@
 #include "convneuralnet.h"
 
-
-
 void convneuralnet::init(){
     y_scale = ofGetHeight() / num_networks;//divides the window width to the number of neural nets
     int largest_num_layers = 0;//the "num_layers" of the largest neural net
@@ -10,19 +8,24 @@ void convneuralnet::init(){
     }//simply finds the num_layers of the largest neural net
     for (int i = 0; i < num_networks; i++) {
         vec2 pos{ 100, y_scale * (i + 0.5) };//init x = 100, (i+0.5) to not start top neural net at VERY top of window
-        network[i].init(pos, total_data, num_inputs);//create network[i]
-        const int last_indx = network[i].num_layers - 1;//index of final layer (layers.size() - 1)
-        layer last = network[i].layers[last_indx];//copy the last (output) layer of the network
-        vec2 p{
-            pos.x + largest_num_layers * network[i].diff + 200,//x position for 'ideals' neuron layer
-            y_scale * (num_networks/2.0) - last.scale * ( last.num_neurons * (num_networks/2.0)) + last.scale*(i-1) * last.neuron_size
+        std::vector<vec2> ind_net_pos;
+        ind_net_pos.push_back(vec2{ pos.x, y_scale * (num_networks / 2.0) });//initial position (x & y) of input layer
+        for(int j = 0; j < network[i].num_layers - 2; j++){//for all layers in network[i] (not output)
+            pos.x += network[i].diff;//intervals of diff
+            ind_net_pos.push_back(vec2{pos.x, y_scale*(i + 0.5)});
+        }
+        vec2 p{//position for OUTPUT layer (1 neuron ~centered)
+            pos.x += network[i].diff,
+            (num_networks / 2.0) * y_scale + layer::scale  * (i - 1)//pls fix aneurism
         };//divides evenly among the ypos based off number of neurons
-        ideals.push_back(layer{ network[i].layers[network[i].num_layers - 1].num_neurons, p});
+        ind_net_pos.push_back(p);//last position for OUTPUT neuron
+        network[i].init(ind_net_pos, total_data, num_inputs);//create network[i]
+        ideals.push_back(layer{ 1, vec2{p.x + network[i].diff, p.y}});//new layer of neuron past output layer
         ideals[i].init();
-        //update last layer's position to be all in front of ideals
-        network[i].layers[last_indx].update_pos(vec2{ p.x - 200, p.y });
-        network[i].layers[0].update_pos(vec2{ pos.x, y_scale * (num_networks / 2.0) });
+        network_pos.push_back(ind_net_pos);
     }
+    init_pos = network_pos;//copies to 'init' state
+
 }
 const string kRootDir = "/home/gustavo/Documents/projects/openFrameworks/";
 void convneuralnet::read_data(){
@@ -67,7 +70,7 @@ void convneuralnet::read_data(){
 }
 void convneuralnet::new_data(){
     for (int i = 0; i < num_networks; i++) {
-        network[i].new_data(&ideals[i]);
+        network[i].test_data(&ideals[i]);
     }
 }
 
@@ -121,16 +124,19 @@ void convneuralnet::output(){
     }
     output.flush();
 }
-void convneuralnet::resize(int w, int h){
+void convneuralnet::resize(vec2 init, vec2 current){//compares current window to initial
     for(int i = 0; i < num_networks; i++){
-        network[i].resize(w, h);
+        for(int j = 0; j < network[i].num_layers; j++){
+            network_pos[i][j].x = init_pos[i][j].x * (current.x/init.x);//scales original x down by window factor
+        }
+        ideals[i].update_pos(vec2{network_pos[i][network[i].num_layers - 1].x + network[i].diff, network_pos[i][network[i].num_layers - 1].y});//based off last value of position matrix
     }
 }
 void convneuralnet::draw()
 {
     for (int i = 0; i < num_networks; i++) {
-        network[i].draw();
-        ideals[i].draw();
+        network[i].draw(network_pos[i]);
+        ideals[i].draw();//based off last value of position matrix
         drawFontText(network[i].cost, vec2(ideals[i].pos.x + 200, ideals[i].pos.y - 30));
         drawFontText(network[i].avg_cost, vec2(ideals[i].pos.x + 400, ideals[i].pos.y - 30));
     }

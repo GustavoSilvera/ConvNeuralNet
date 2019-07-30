@@ -1,10 +1,10 @@
 #include "net.h"
 
-void net::init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs){
+void net::init(std::vector<vec2> pos, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs){
     num_layers = num_neurons.size();
+    position = pos;//updates local position matrix
     for (int i = 0; i < num_layers; i++) {
-        dvec2 layerPos{ double(p.x) + diff * (i + 0.5), p.y };
-        layers.push_back(layer{ num_neurons[i], layerPos });
+        layers.push_back(layer{ num_neurons[i], position[i] });
     }
     total_data_lines = int(total_data.size());
     extract_data(total_data, num_inputs);
@@ -110,6 +110,22 @@ void net::new_data(layer *optimal){
     num_errors++;
     data_line++;//next line (next time)
     avg_cost = total_cost / num_errors;
+}
+
+void net::test_data(layer *optimal){
+    if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
+    std::vector<double> new_inputs;
+    for (int i = 0; i < layers[0].num_neurons; i++) {//first .num_neuron elements in data[] is inputs
+        new_inputs.push_back(data[data_line][i]);
+    }
+    layers[0].update_value(new_inputs);//first (input) layer is first updates
+    std::vector<double> new_outputs;
+    for (int i = layers[0].num_neurons; i < data[data_line].size(); i++) {//starting where last loop left off
+        new_outputs.push_back(data[data_line][i]);
+    }
+    update_layers();
+    optimal->update_value(new_outputs);//optimal (the "should be" output) layer is second
+    data_line++;//next line (next time)
 }
 
 double net::compute_cost(layer *optimal){
@@ -276,8 +292,17 @@ void net::resize(int w, int h){
         layers[i].update_value(new_values, bias[i-1]);//bias[0] corresponds to layers[1] & so on
     }
 }
-void net::draw()
-{
+
+void update_layer_pos(){
+
+}
+void net::draw(std::vector<vec2> pos){
+    if(position != pos){//updates position if necessary
+        position = pos;
+        for (int i = 0; i < num_layers; i++) {
+            layers[i].update_pos(position[i]);
+        }
+    }
     //draw all the weights
     for (int i = 0; i < num_layers - 1; i++) {//for every layer (except last one)
         for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer

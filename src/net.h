@@ -35,7 +35,8 @@ public:
     bool training = false;
     double cost = 0, total_cost = 0, avg_cost = 0;
     int diff = 300;//300 pixel intervals
-    void init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
+    void init(std::vector<vec2> pos, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
+    std::vector<vec2> position;
     int total_data_lines;
     int data_line = 0;
     void extract_data(std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
@@ -44,6 +45,7 @@ public:
     void update_layers();
     void comp_avg_cost(layer* opt);
     void new_data(layer* optimal);
+    void test_data(layer* optimal);
     double compute_cost(layer* optimal);
     void randomize_weights();
     struct total_changes {
@@ -55,6 +57,6 @@ public:
     vec3 colorGrade(double w);
     string output();
     void resize(int w, int h);
-    void draw();
+    void draw(std::vector<vec2> pos);
 };
 #endif // NET_H

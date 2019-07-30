@@ -7,8 +7,10 @@ void neuron::border_color(double value){//updates rim around neurons based on bi
     else col = (vec3{ color, 0, 0 });
 }
 
-void neuron::draw(float s){
-    size = s;
+void neuron::update_pos(vec2 p){
+    pos = p;
+}
+void neuron::draw(){
     ofFill();
     const int bg_col = int(clampd(0, 255, 255*val));
     ofSetColor(bg_col, bg_col, bg_col);//gradient background circle

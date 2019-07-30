@@ -11,12 +11,12 @@ public:
     layer(int s, vec2 p) : num_neurons(s), pos(p) {}
     int num_neurons;
     vec2 pos;
-    int neuron_size = 30;
     std::vector<neuron> n;
     double total_height;
     bool hovering = false;
-    const double scale = 2.5;
+    constexpr static const double scale = 75;//how 'spread out' the neurons are
     void init();
+    void new_pos(vec2 p);
     void update_pos(vec2 p);
     void update_value(std::vector<double> values, std::vector<double> biases);
     void update_value(std::vector<double> values);

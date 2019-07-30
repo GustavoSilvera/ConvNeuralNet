@@ -9,9 +9,10 @@ public:
     double val = 0;//weight
     vec2 pos;
     vec3 col{255, 255, 255};
-    float size = 0;
+    float size = 30;
     void border_color(double value);
-    void draw(float s);
+    void update_pos(vec2 p);
+    void draw();
 };
 
 #endif // NEURON_H

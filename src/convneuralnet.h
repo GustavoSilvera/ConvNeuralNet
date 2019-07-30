@@ -34,6 +34,7 @@ public:
         init();
     }
     std::vector<net> network;
+    std::vector<std::vector<vec2>> network_pos, init_pos;
     std::vector<layer> ideals;
     std::vector<std::vector<double>> total_data;//single large dataset of all i/o
     std::vector<int> num_inputs, num_outputs;
@@ -49,7 +50,7 @@ public:
     void comp_avg_cost();
     void avg_improve();
     void output();
-    void resize(int w, int h);
+    void resize(vec2 init, vec2 current);
     void draw();
 };
 
