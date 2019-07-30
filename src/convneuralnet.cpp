@@ -121,7 +121,11 @@ void convneuralnet::output(){
     }
     output.flush();
 }
-
+void convneuralnet::resize(int w, int h){
+    for(int i = 0; i < num_networks; i++){
+        network[i].resize(w, h);
+    }
+}
 void convneuralnet::draw()
 {
     for (int i = 0; i < num_networks; i++) {

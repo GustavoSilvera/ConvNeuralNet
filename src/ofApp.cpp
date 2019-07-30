@@ -70,6 +70,7 @@ void ofApp::keyPressed(int key){
 void ofApp::windowResized(int w, int h){
     new_window_x = w;
     new_window_y = h;
+    cnn.resize(w, h);//update CNN to fit in screen
     corner_fps.x = w - 150;
     g_avgcost.update_pos(w - 800, h - 300);
     g_marginalcost.update_pos(w - 800, h - 50);

@@ -49,6 +49,7 @@ public:
     void comp_avg_cost();
     void avg_improve();
     void output();
+    void resize(int w, int h);
     void draw();
 };
 

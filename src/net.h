@@ -34,7 +34,7 @@ public:
     vector<vector<double>> data;// all the data from the txt file
     bool training = false;
     double cost = 0, total_cost = 0, avg_cost = 0;
-    const int diff = 200;//300 pixel intervals
+    int diff = 300;//300 pixel intervals
     void init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
     int total_data_lines;
     int data_line = 0;
@@ -54,6 +54,7 @@ public:
     void avg_improve(layer* ideal, layer* rel_ideal, vector<double> t_changes, int layerInd = 0);
     vec3 colorGrade(double w);
     string output();
+    void resize(int w, int h);
     void draw();
 };
 #endif // NET_H

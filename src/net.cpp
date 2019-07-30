@@ -257,7 +257,25 @@ string net::output(){
     return ret;
 
 }
-
+void net::resize(int w, int h){
+    for (int i = 1; i < num_layers; i++) {//only the next layers (last ones)
+        std::vector<double> new_values;
+        for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in the next layers
+            double weighted_sum = 0;
+            for (int k = 0; k < layers[i - 1].num_neurons; k++) {//back to every neuron in last layer
+                weighted_sum += layers[i - 1].n[k].val * weights[i - 1][k][j];//adds to the weighted sum
+            }
+            if (i < layers[i].num_neurons - 1) {
+                if(usingSigmoid) new_values.push_back(sigmoid(weighted_sum + bias[i - 1][j]));
+                else new_values.push_back(smooth_RelU(weighted_sum + bias[i - 1][j]));
+            }
+            else {
+                new_values.push_back(weighted_sum + bias[i - 1][j]);//no sigmoid on last layer (needs to be outputs)
+            }
+        }
+        layers[i].update_value(new_values, bias[i-1]);//bias[0] corresponds to layers[1] & so on
+    }
+}
 void net::draw()
 {
     //draw all the weights
