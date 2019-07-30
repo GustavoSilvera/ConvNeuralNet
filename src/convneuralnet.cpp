@@ -16,7 +16,7 @@ void convneuralnet::init(){
         }
         vec2 p{//position for OUTPUT layer (1 neuron ~centered)
             pos.x += network[i].diff,
-            (num_networks / 2.0) * y_scale + layer::scale  * (i - 1)//pls fix aneurism
+            (num_networks / 2.0) * y_scale + 75  * (i - 1)//pls fix aneurism
         };//divides evenly among the ypos based off number of neurons
         ind_net_pos.push_back(p);//last position for OUTPUT neuron
         network[i].init(ind_net_pos, total_data, num_inputs);//create network[i]
@@ -128,6 +128,8 @@ void convneuralnet::resize(vec2 init, vec2 current){//compares current window to
     for(int i = 0; i < num_networks; i++){
         for(int j = 0; j < network[i].num_layers; j++){
             network_pos[i][j].x = init_pos[i][j].x * (current.x/init.x);//scales original x down by window factor
+            network_pos[i][j].y = init_pos[i][j].y * (current.y/init.y);//scales original y down by window factor
+            network[i].layers[j].scale = 75 * double(current.y/init.y);
         }
         ideals[i].update_pos(vec2{network_pos[i][network[i].num_layers - 1].x + network[i].diff, network_pos[i][network[i].num_layers - 1].y});//based off last value of position matrix
     }

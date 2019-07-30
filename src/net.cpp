@@ -293,9 +293,6 @@ void net::resize(int w, int h){
     }
 }
 
-void update_layer_pos(){
-
-}
 void net::draw(std::vector<vec2> pos){
     if(position != pos){//updates position if necessary
         position = pos;

@@ -14,7 +14,7 @@ public:
     std::vector<neuron> n;
     double total_height;
     bool hovering = false;
-    constexpr static const double scale = 75;//how 'spread out' the neurons are
+    double scale = 75;//how 'spread out' the neurons are
     void init();
     void new_pos(vec2 p);
     void update_pos(vec2 p);

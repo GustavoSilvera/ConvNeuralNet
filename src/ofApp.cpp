@@ -27,7 +27,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    glPushMatrix();
     /*float scale_x = new_window_x/init_window_x;
     float scale_y = new_window_y/init_window_y;
     ofScale(scale_x, scale_y);*/
@@ -41,8 +40,6 @@ void ofApp::draw(){
     ofSetColor(255, 255, 255);
     drawFontText(cnn.avg_cost, vec2(corner_fps.x - 100, corner_fps.y + 2 * 80));
     drawFontText(cnn.total_data.size(), vec2(corner_fps.x - 100, corner_fps.y + 3 * 80));
-    glPopMatrix();
-
 }
 
 //--------------------------------------------------------------
@@ -62,7 +59,7 @@ void ofApp::keyPressed(int key){
     if (key == OF_KEY_RETURN) {//new random DATA
         cnn.randomize_weights();
     }
-    if(key == 27){
+    if(key == OF_KEY_ESC){
         OF_EXIT_APP(0);
     }
 }
@@ -72,8 +69,8 @@ void ofApp::windowResized(int w, int h){
     new_window_y = h;
     cnn.resize(vec2{init_window_x, init_window_y}, vec2{w, h});//update CNN to fit in screen
     corner_fps.x = w - 150;
-    g_avgcost.update_pos(w - 800, h - 300);
-    g_marginalcost.update_pos(w - 800, h - 50);
+    g_avgcost.update_pos(w - 700, h - 300);
+    g_marginalcost.update_pos(w - 700, h - 50);
     //cnn.update_pos(w, h);
 }
 //--------------------------------------------------------------

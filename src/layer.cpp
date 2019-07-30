@@ -9,16 +9,8 @@ void layer::init(){
         n.push_back(neuron((rand() % 100) / 100.0, vec2(pos.x, yPos)));//random weights for now
     }
 }
-
-void layer::new_pos(vec2 p){
-    n.clear();//wipes slate clean
-    for (int i = 0; i < num_neurons; i++) {//n.size() is fixed as neuron_size
-        double yPos = p.y - total_height / 2 + scale * i;
-        n.push_back(neuron((rand() % 100) / 100.0, vec2(p.x, yPos)));//random weights for now
-    }
-}
-
 void layer::update_pos(vec2 p){
+    total_height = num_neurons * scale;
     pos = p;
 }
 void layer::update_value(std::vector<double> values, std::vector<double> biases){
