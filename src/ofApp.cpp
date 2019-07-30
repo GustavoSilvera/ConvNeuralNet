@@ -6,9 +6,8 @@ void ofApp::setup(){
     std::srand(std::time(nullptr)); // use current time as seed for random generator
     init_window_x = new_window_x = float(ofGetWidth());
     init_window_y = new_window_y = float(ofGetHeight());
-    corner_fps.x = ofGetWidth() - 300;
-    corner_fps.y = 0 + 160;
-    renderFont();
+    corner_fps.x = ofGetWidth() - 150;
+    corner_fps.y = 50;
     // clear out the window with black
     ofSetBackgroundColor(0, 0, 0);
 }
@@ -35,12 +34,13 @@ void ofApp::draw(){
     cnn.draw();
     g_avgcost.draw();
     g_marginalcost.draw();
-    ofSetColor(0, 255, 0);
+    const double FPS = double(ofGetFrameRate());
+    ofSetColor(int(((60.0 - FPS)/60.0)*255), int((FPS/60.0)*255), 0);
     drawFontText(double(ofGetFrameRate()), vec2(corner_fps.x, corner_fps.y));
     //drawFontText(n.cost, Vec2f(corner_fps.x, corner_fps.y + 80));
     ofSetColor(255, 255, 255);
-    drawFontText(cnn.avg_cost, vec2(corner_fps.x, corner_fps.y + 2 * 80));
-    drawFontText(cnn.network[0].data.size(), vec2(corner_fps.x, corner_fps.y + 3 * 80));
+    drawFontText(cnn.avg_cost, vec2(corner_fps.x - 100, corner_fps.y + 2 * 80));
+    drawFontText(cnn.total_data.size(), vec2(corner_fps.x - 100, corner_fps.y + 3 * 80));
     glPopMatrix();
 
 }
@@ -70,7 +70,7 @@ void ofApp::keyPressed(int key){
 void ofApp::windowResized(int w, int h){
     new_window_x = w;
     new_window_y = h;
-    corner_fps.x = w - 300;
+    corner_fps.x = w - 150;
     g_avgcost.update_pos(w - 800, h - 300);
     g_marginalcost.update_pos(w - 800, h - 50);
     //cnn.update_pos(w, h);

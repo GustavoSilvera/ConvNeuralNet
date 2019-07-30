@@ -16,7 +16,6 @@ public:
             num_neurons.push_back(network[i]);
         }
         num_layers = num_neurons.size();
-
     }
     //CNN stuff
     int focus_variable;
@@ -35,7 +34,7 @@ public:
     vector<vector<double>> data;// all the data from the txt file
     bool training = false;
     double cost = 0, total_cost = 0, avg_cost = 0;
-    const int diff = 300;//300 pixel intervals
+    const int diff = 200;//300 pixel intervals
     void init(vec2 p, std::vector<std::vector<double>> total_data, std::vector<int> num_inputs);
     int total_data_lines;
     int data_line = 0;

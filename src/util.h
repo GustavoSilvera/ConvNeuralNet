@@ -100,16 +100,16 @@ public:
         return vec3(clamp(min, max, x), clamp(min, max, y), clamp(min, max, z));
     }
 };*/
-static void renderFont(){
-    font.load("verdana.ttf", 25);//once per setup renderer
+static void renderFont(int size){
+    font.load("verdana.ttf", size);//loading font at specific size
 }
-static void drawFontText(double text, vec2 pos) {
-    if(!font.isLoaded()) renderFont();
+static void drawFontText(double text, vec2 pos, int size = 25) {
+    if(!font.isLoaded()) renderFont(size);
     std::stringstream dummyText;
     std::string PRINT;
-    dummyText << text;
+    dummyText << setprecision(4) << text;
     dummyText >> PRINT;
-    pos.x += 50;
+    pos.x += 35;
     font.drawString(PRINT, float(pos.x), float(pos.y));
 }
 #endif // UTIL_H
