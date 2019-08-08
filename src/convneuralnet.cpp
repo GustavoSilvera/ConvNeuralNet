@@ -90,15 +90,11 @@ void convneuralnet::comp_avg_cost(){
     avg_cost /= num_networks;
 }
 
-static void avg_improve_thread(net* network, layer* ideal){
-    std::vector<double> v;
-    network->avg_improve(ideal, ideal, v);
-}
 void convneuralnet::avg_improve(){
-    std::vector<std::thread> threads;
+    std::vector<std::thread> threads;//amdalhs law
     for(int i = 0; i < num_networks; i++){
         //threads.push_back(std::thread(avg_improve_thread, &network[i], &ideals[i]));
-        threads.push_back(std::thread([&, i]{
+        threads.push_back(std::thread([&, i]{//creates new thread for computing individual avg_improve
             std::vector<double> v;
             network[i].avg_improve(&ideals[i], &ideals[i], v);
         }));
