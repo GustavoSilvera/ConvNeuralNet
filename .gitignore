@@ -1,0 +1,2 @@
+#git ignore for conv neural net... dont want binaries
+/obj/
