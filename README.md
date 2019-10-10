@@ -4,7 +4,7 @@ Simple 2D Visualization of a Convolutional Neural Net using OpenFrameworks2D and
 
 **Requires** OpenFrameworks v0.10.1 ==> openframeworks.cc/download/\
 **INSTALL:**\
-    Once you install OpenFrameworks for your system, place it in the home directory with name OF/ and run *make*
+    Once you install OpenFrameworks for your system, place it in the home directory with name OF/ and run *make*\
 **HOW TO COMPILE:**\
     First, compile using an IDE with support for C++ and OpenFrameworks Libraries.\
     Compiler should output an executable binary in /bin\
