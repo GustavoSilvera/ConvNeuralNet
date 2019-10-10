@@ -2,7 +2,7 @@ Simple 2D visualization of a Convolutional Neural Net using OpenFrameworks2D and
 
 ![](images/ConvNeuralNet.gif)
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------\
+Requires OpenFrameworks v0.10.1 ==> openframeworks.cc/download/\
 HOW TO COMPILE:\
     First, compile using an IDE with support for C++ and OpenFrameworks Libraries.\
     Compiler should output an executable binary in /bin\
@@ -23,4 +23,4 @@ RT_SHIFT:\
 ENTER:\
 	Randomize weights on entire Neural Net\
 ESC:\
-	Exit application\
+	Exit application
