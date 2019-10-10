@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ofMain.h"
+#include "/home/gustavo/OF/libs/openFrameworks/ofMain.h"
 #include "convneuralnet.h"
 #include "graph.h"
 

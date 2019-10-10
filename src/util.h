@@ -4,7 +4,7 @@
 #include <math.h>
 #include <fstream>
 
-#include "ofMain.h"//main OF include for everything... placed here bc everything includes util...
+#include "/home/gustavo/OF/libs/openFrameworks/ofMain.h"//main OF include for everything... placed here bc everything includes util...
 static ofTrueTypeFont font;
 using namespace glm;
 static inline double clampd(double min, double max, double i) {

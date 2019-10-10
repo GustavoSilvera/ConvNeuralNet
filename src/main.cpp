@@ -1,4 +1,4 @@
-#include "ofMain.h"
+#include "/home/gustavo/OF/libs/openFrameworks/ofMain.h"
 #include "ofApp.h"
 
 //========================================================================
