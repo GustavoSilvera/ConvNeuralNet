@@ -3,14 +3,22 @@
 #include <thread>
 #include <iostream>
 
+size_t convneuralnet::get_num_networks() const {
+  return num_networks;
+}
+net convneuralnet::get_network(size_t i) const{
+  return network[i];
+}
 void convneuralnet::init(){
   int largest_num_layers = 0;//the "num_layers" of the largest neural net
-  for (int i = 0; i < num_networks; i++) {
-    if (network[i].num_layers >= largest_num_layers) largest_num_layers = network[i].num_layers;
+  for (size_t i = 0; i < num_networks; i++) {
+    if (network[i].get_num_layers() >= largest_num_layers)
+      largest_num_layers = network[i].get_num_layers();
   }//simply finds the num_layers of the largest neural net
-  for (int i = 0; i < num_networks; i++) {
+  for (size_t i = 0; i < num_networks; i++) {
+    //each network corresponds to one specific output, thus one 'ideal' neuron
     ideals.push_back(layer{1});//new layer of neuron past output layer
-    ideals[i].init();
+    ideals[i].init_rand();
   }
 
 }
@@ -21,9 +29,9 @@ bool convneuralnet::read_data(){
 #define MAX_LINE 100
   std::ifstream file("../src/DATA_good.txt");//using CWD
   std::ifstream file2("../src/DATA_good.txt");//need this to find "file_length" bc the istreambuf iterator DELETES the file after reading??
-  int file_length = int(std::count(std::istreambuf_iterator<char>(file2),std::istreambuf_iterator<char>(), '\n'));//gets number of '\n' in the file
+  size_t file_length = size_t(std::count(std::istreambuf_iterator<char>(file2),std::istreambuf_iterator<char>(), '\n'));//gets number of '\n' in the file
   if(file.is_open()){
-    int line_num = 0;
+    size_t line_num = 0;
     while (line_num < file_length) {
       char line[MAX_LINE];//default line (less than 100 chars)
       file.getline(line, MAX_LINE);
@@ -31,7 +39,7 @@ bool convneuralnet::read_data(){
       std::string sline = line;
       int end_inputs = sline.find(';');//has to be recomputed every time (strings are diff)
       int end_outputs = sline.size();
-      int i = 0;
+      size_t i = 0;
       num_inputs.push_back(0);//initialize num_inputs[line_num]
       num_outputs.push_back(0);//initialize num_outputs[line_num]
       while(sline.find(' ', i) < end_inputs){
@@ -62,13 +70,13 @@ bool convneuralnet::read_data(){
   return true;
 }
 void convneuralnet::new_data(){
-  for (int i = 0; i < num_networks; i++) {
+  for (size_t i = 0; i < num_networks; i++) {
     network[i].test_data(&ideals[i]);
   }
 }
 
 void convneuralnet::randomize_weights(){
-  for (int i = 0; i < num_networks; i++) {
+  for (size_t i = 0; i < num_networks; i++) {
     network[i].randomize_weights();
   }
 }
@@ -76,30 +84,30 @@ void convneuralnet::randomize_weights(){
 void convneuralnet::comp_avg_cost(){
   last_cost = avg_cost;
   avg_cost = 0;
-  for (int i = 0; i < num_networks; i++) {
+  for (size_t i = 0; i < num_networks; i++) {
     network[i].comp_avg_cost(&ideals[i]);
-    avg_cost += network[i].avg_cost;
+    avg_cost += network[i].get_avg_cost();
   }
   avg_cost /= num_networks;
 }
 
 void convneuralnet::avg_improve(){
   std::vector<std::thread> threads;//amdalhs law
-  for(int i = 0; i < num_networks; i++){
+  for(size_t i = 0; i < num_networks; i++){
     //threads.push_back(std::thread(avg_improve_thread, &network[i], &ideals[i]));
     threads.push_back(std::thread([&, i]{//creates new thread for computing individual avg_improve
 				    std::vector<double> v;
 				    network[i].avg_improve(&ideals[i], &ideals[i], v);
 				  }));
   }
-  //for(int i = 0; i < num_networks; i++){
+  //for(size_t i = 0; i < num_networks; i++){
   //    threads[i].join();
   //}
   for (auto &thread:threads) {
     thread.join();
   }
   //std::thread top (network[0].avg_improve, &ideals[0], &ideals[0], v);
-  /*for (int i = 0; i < num_networks; i++) {
+  /*for (size_t i = 0; i < num_networks; i++) {
     std::vector<double> v;
     network[i].avg_improve(&ideals[i], &ideals[i], v);
     }*/
@@ -107,7 +115,7 @@ void convneuralnet::avg_improve(){
 }
 void convneuralnet::output(){
   std::ofstream output("output.txt");
-  for (int i = 0; i < num_networks; i++) {
+  for (size_t i = 0; i < num_networks; i++) {
     output << "//Network: " << i + 1 << "\n";
     output << network[i].output();
   }

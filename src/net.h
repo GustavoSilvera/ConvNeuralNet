@@ -8,7 +8,7 @@ using namespace std;
 
 class net {
 public:
-  net(const int focus_var, const vector<size_t> network, bool const using_sig, size_t max_weight) :
+  net(size_t focus_var, vector<size_t> network, bool using_sig, size_t max_weight) :
     focus_variable(focus_var),
     num_layers(network.size()),
     using_sigmoid(using_sig),
@@ -30,22 +30,19 @@ public:
   double compute_cost(layer* optimal);
   string output() const;
   //getters
-  const int get_num_layers() const;
-  int get_cost() const;
-  int get_avgcost() const;
-  vector<vector<vector<double>>> get_weights() const;
-  //setters
-  void set_weights(vector<vector<vector<double>>>);
+  const size_t get_num_layers() const;
+  double get_avg_cost() const;
+  layer get_layer(size_t i) const;
   //training
   void start_training();
   void end_training();
 private:
   //CNN stuff
-  int focus_variable;//which variable is being focused on
+  size_t focus_variable;//which variable is being focused on
   bool using_sigmoid;
   double weight_max;
-  const int num_layers;
-  int num_errors = 1;
+  const size_t num_layers;
+  size_t num_errors = 1;
   vector<size_t> num_neurons;
   vector<layer> layers;
   vector<vector<vector<double>>> weights;//weights from ind. neurons to all neurons in next layer

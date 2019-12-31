@@ -1,5 +1,15 @@
 #include "net.h"
 
+const size_t net::get_num_layers() const{
+  return num_layers;
+}
+double net::get_avg_cost() const{
+  return avg_cost;
+}
+layer net::get_layer(size_t i) const{
+  return layers[i];
+}
+
 void net::init(vector<vector<double>> total_data, vector<int> num_inputs){
   for (size_t i = 0; i < num_layers; i++) {
     //creates the layers of the network

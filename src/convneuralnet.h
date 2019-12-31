@@ -16,7 +16,7 @@ public:
     read_data();
     vector<vector<size_t>> inner_layers {{4, 2}, {3, 4}, {4, 2}};
     vector<bool> using_sigmoid {true, false, true};
-    vector<int> maximum_weights{1, 1, 1};
+    vector<size_t> maximum_weights{1, 1, 1};
     vector<vector<size_t>> final_layers;
     vector<net> n;
     for(size_t i = 0; i < num_inputs[i]; i++){//for all inputs (should be same accross all 'i')
@@ -36,6 +36,9 @@ public:
     init();
   }
   void init();
+  //getters
+  size_t get_num_networks() const;
+  net get_network(size_t i) const;
   vector<net> network;
   vector<layer> ideals;
   vector<vector<double>> total_data;//single large dataset of all i/o
