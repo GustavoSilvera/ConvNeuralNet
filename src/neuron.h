@@ -4,15 +4,11 @@
 
 class neuron {
 public:
-    neuron() : val(-1) {}
-    neuron(double v, vec2 p) : val(v), pos(p) {}
-    double val = 0;//weight
-    vec2 pos;
-    vec3 col{255, 255, 255};
-    float size = 30;
-    void border_color(double value);
-    void update_pos(vec2 p);
-    void draw();
+  neuron(double w) : weight(w) {}
+  double get_val() const;
+  void set_val(const double value);
+private:
+  double weight = 0;//weight
 };
 
 #endif // NEURON_H

@@ -3,7 +3,7 @@
 void ofApp::setup(){
   //seed random number generator
   std::srand(std::time(nullptr)); // use current time as seed for random generator
-  //  cnn.training = true;
+  cnn.training = true;
 }
 
 //--------------------------------------------------------------
@@ -11,6 +11,7 @@ void ofApp::update(){
   for (int i = 0; i < 10; i++) {
     if (cnn.training) {
       cnn.avg_improve();
+      g_avgcost.add_data(cnn.avg_cost);
       if (cnn.avg_cost < 1) cnn.training = false;
     }
   }

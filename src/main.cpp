@@ -1,17 +1,22 @@
-#include "/home/gustavo/OF/libs/openFrameworks/ofMain.h"
 #include "ofApp.h"
+#include <iostream>
 
-//========================================================================
-int main( ){
-    const double window_scale = 0.7;
-    const int initWidth = int(2000 * window_scale);
-    const int initHeight = int(1700 * window_scale);
-    ofSetupOpenGL(initWidth,initHeight,OF_WINDOW);			// <-------- setup the GL context
-    //glutInitDisplayString( "rgba double samples>=4 ");
-    //glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA | GLUT_MULTISAMPLE);
-    // this kicks off the running of my app
-    // can be OF_WINDOW or OF_FULLSCREEN
-    // pass in width and height too:
-    ofRunApp(new ofApp());
-
+int main(){
+  ofApp a;
+  std::cout << "\nBuilding Convolutional Neural Net with " << a.cnn.num_networks << " networks";
+  for(size_t i = 0; i < a.cnn.num_networks; i++){
+    std::cout << "\nNet: " << i << " = ";
+    for(size_t j = 0; j < a.cnn.networks[i].num_layers; j++){
+      std::cout << a.cnn.networks[j].layers[j].num_neurons; << " ";
+    }
+  }
+  std::cout << "\nStarting setup...";
+  a.setup();
+  std::cout << "setup complete.\n";
+  std::cout << "\nReading data from: ";// << std::getenv("CWD");
+  std::cout << "read this?";
+  while(true){
+    a.update();
+  }
+  return 0;
 }
