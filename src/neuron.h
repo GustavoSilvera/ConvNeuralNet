@@ -5,8 +5,8 @@
 class neuron {
 public:
   neuron(double w) : weight(w) {}
-  double get_val() const;
-  void set_val(const double value);
+  double get_weight() const;
+  void set_weight(const double value);
 private:
   double weight = 0;//weight
 };

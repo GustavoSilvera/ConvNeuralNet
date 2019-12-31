@@ -4,17 +4,16 @@ void layer::init_rand(){
   //initializses the network's layer by RANDOMLY assigning to neurons
   for (size_t i = 0; i < num_neurons; i++) {
     double random = (rand() % 1000) / 1000;
-    neuron n = neuron(random);
-    n.push_back(n);
+    n.push_back(neuron(random));
   }
 }
-int get_num_neurons() const {
+size_t layer::get_num_neurons() const {
   return num_neurons;
 }
-neuron get_neuron(size_t indx){
+neuron layer::get_neuron(size_t indx){
   return n[indx];
 }
-void set_neuron(size_t indx, double weight){
+void layer::set_neuron(size_t indx, double weight){
   n[indx].set_weight(weight);
 }
 void layer::update_weights(std::vector<double> values){

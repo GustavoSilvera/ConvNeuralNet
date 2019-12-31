@@ -8,11 +8,12 @@ using namespace std;
 
 class net {
 public:
-  net(const int focus_var, const vector<int> network, bool const using_sig, size_t max_weight)  {
-    focus_variable = focus_var;
-    using_sigmoid = using_sig;
-    weight_max = max_weight;
-    num_layers = network.size();
+  net(const int focus_var, const vector<size_t> network, bool const using_sig, size_t max_weight) :
+    focus_variable(focus_var),
+    num_layers(network.size()),
+    using_sigmoid(using_sig),
+    weight_max(max_weight)
+  {
     for (size_t i = 0; i < num_layers; i++) {
       //makes copy of network into num_neurons
       num_neurons.push_back(network[i]);
@@ -21,8 +22,7 @@ public:
   void init(vector<vector<double>> total_data, vector<int> num_inputs);
   void update_layers();
   void extract_data(vector<vector<double>> total_data, vector<int> num_inputs);
-  total_changes improve(int i, layer* ideal, vector<double> t_changes);
-  void avg_improve(layer* ideal, layer* rel_ideal, vector<double> t_changes, int layerInd = 0);
+  void avg_improve(layer* ideal, layer* rel_ideal, vector<double> t_changes, size_t layerInd = 0);
   void comp_avg_cost(layer* opt);
   void new_data(layer* optimal);
   void test_data(layer* optimal);
@@ -46,7 +46,7 @@ private:
   double weight_max;
   const int num_layers;
   int num_errors = 1;
-  const vector<int> num_neurons;
+  vector<size_t> num_neurons;
   vector<layer> layers;
   vector<vector<vector<double>>> weights;//weights from ind. neurons to all neurons in next layer
   vector<vector<vector<double>>> weight_changes;
@@ -63,5 +63,6 @@ private:
     vector<vector<double>> weight_changes;
     vector<double> bias_changes;
   };
+  total_changes improve(int i, layer* ideal, vector<double> t_changes);
 };
 #endif // NET_H

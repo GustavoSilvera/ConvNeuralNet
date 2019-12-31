@@ -3,21 +3,21 @@
 void net::init(vector<vector<double>> total_data, vector<int> num_inputs){
   for (size_t i = 0; i < num_layers; i++) {
     //creates the layers of the network
-    layer L = new layer{num_neurons[i]};
+    layer L{num_neurons[i]};
     layers.push_back(L);
   }
   total_data_lines = size_t(total_data.size());
   extract_data(total_data, num_inputs);
   //hovering colors
-  for (int i = 0; i < num_layers; i++) {
-    layers[i].init();//init all the layers
+  for (layer L : layers) {
+    L.init_rand();//initialize all the layers randomly
   }
   //creates random weights
   for (size_t i = 0; i < num_layers - 1; i++) {//for every (behind) layer [not the last one]
     vector<vector<double>> ind_neuron;
-    for (size_t j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
+    for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in said layer
       vector<double> ind_neuron_weights;
-      for (size_t k = 0; k < layers[i + 1].num_neurons; k++) {//for every neuron in the NEXT layer
+      for (size_t k = 0; k < layers[i + 1].get_num_neurons(); k++) {//for every neuron in the NEXT layer
 	int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
 	ind_neuron_weights.push_back(((rand() % rand_max) / 100.0) - weight_max);
       }
@@ -28,7 +28,7 @@ void net::init(vector<vector<double>> total_data, vector<int> num_inputs){
   //creates random biases
   for (size_t i = 1; i < num_layers; i++) {//for every later layer (not the first one)
     vector<double> ind_biases;
-    for (size_t j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
+    for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in said layer
       int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
       ind_biases.push_back(((rand() % rand_max) / 100.0) - weight_max);//individual 'default' biases are 0
     }
@@ -80,7 +80,7 @@ void net::update_layers(){
 	new_values.push_back(weighted_sum + bias[i - 1][j]);//no sigmoid on last layer (needs to be outputs)
       }
     }
-    layers[i].update_weights(new_values, bias[i-1]);//bias[0] corresponds to layers[1] & so on
+    layers[i].update_weights(new_values);//bias[0] corresponds to layers[1] & so on
   }
 }
 void net::comp_avg_cost(layer *opt){
@@ -97,12 +97,12 @@ void net::new_data(layer *optimal){
   for (size_t i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
     new_inputs.push_back(data[data_line][i]);
   }
-  layers[0].update_value(new_inputs);//first (input) layer is first updates
+  layers[0].update_weights(new_inputs);//first (input) layer is first updates
   vector<double> new_outputs;
-  for (int i = layers[0].num_neurons; i < data[data_line].size(); i++) {//starting where last loop left off
+  for (size_t i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
     new_outputs.push_back(data[data_line][i]);
   }
-  optimal->update_value(new_outputs);//optimal (the "should be" output) layer is second
+  optimal->update_weights(new_outputs);//optimal (the "should be" output) layer is second
   cost = compute_cost(optimal);
   total_cost += cost;
   num_errors++;
@@ -113,24 +113,24 @@ void net::new_data(layer *optimal){
 void net::test_data(layer *optimal){
   if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
   vector<double> new_inputs;
-  for (int i = 0; i < layers[0].num_neurons; i++) {//first .num_neuron elements in data[] is inputs
+  for (int i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
     new_inputs.push_back(data[data_line][i]);
   }
-  layers[0].update_value(new_inputs);//first (input) layer is first updates
+  layers[0].update_weights(new_inputs);//first (input) layer is first updates
   vector<double> new_outputs;
-  for (int i = layers[0].num_neurons; i < data[data_line].size(); i++) {//starting where last loop left off
+  for (int i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
     new_outputs.push_back(data[data_line][i]);
   }
   update_layers();
-  optimal->update_value(new_outputs);//optimal (the "should be" output) layer is second
+  optimal->update_weights(new_outputs);//optimal (the "should be" output) layer is second
   data_line++;//next line (next time)
 }
 
 double net::compute_cost(layer *optimal){
   double error = 0;
   update_layers();
-  for (int i = 0; i < layers[num_layers - 1].num_neurons; i++) {
-    error += sqr(layers[num_layers - 1].n[i].val - optimal->n[i].val);
+  for (int i = 0; i < layers[num_layers - 1].get_num_neurons(); i++) {
+    error += sqr(layers[num_layers - 1].get_neuron(i).get_weight() - optimal->get_neuron(i).get_weight());
   }
   return error;
 }
@@ -150,27 +150,28 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
   total_changes t;
   vector<double> changes;
   if (t_changes.size() == 0) {//basically only for the output layer (same dimens as output-ideal)
-    for (int j = 0; j < layers[i].num_neurons; j++) {
+    for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {
       changes.push_back(ideal->get_neuron(j).get_weight() - layers[i].get_neuron(j).get_weight());//difference bw output & ideal
     }
   }
   else {
-    for (int j = 0; j < layers[i].get_num_neurons(); j++) {
+    for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {
       double sum = 0;
-      for (int k = 0; k < t_changes.size(); k++) {
+      for (size_t k = 0; k < t_changes.size(); k++) {
 	sum += weights[i][j][k] * t_changes[k];//adds up all the WEIGHTED changes from the next layer
       }
+      //assert t_changes > 0
       changes.push_back(sum/t_changes.size());//average total direction change over t_changes
     }
   }
-  for (int j = 0; j < layers[i].num_neurons; j++) {//for every neuron in said layer
+  for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in said layer
     //compare neuron[i] to ideal_neuron[i];
     const double step = 0.001;
     double bias_change = step * changes[j];
     vector<double> ind_mods;
     //increase weight if its neuron is positive, decrease if negative;
-    for (int k = 0; k < layers[i-1].num_neurons; k++) {//for every (behind)weight its attached to
-      double weight_change = step * changes[j] * (layers[i-1].n[k].val);//proportional difference to the direction of change and neuron value
+    for (size_t k = 0; k < layers[i-1].get_num_neurons(); k++) {//for every (behind)weight its attached to
+      double weight_change = step * changes[j] * (layers[i-1].get_neuron(k).get_weight());//proportional difference to the direction of change and neuron value
       //weights[i - 1][k][j] += weight_change;//change weights proportoinal to the error
       ind_mods.push_back(weight_change);
     }
@@ -181,29 +182,29 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> t_changes){
   return t;
 }
 
-void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, int layerInd){
+void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, size_t layerInd){
   if (t_changes.size() == 0) layerInd = num_layers - 1;//very first condition
   if (layerInd > 0) {//recursion failsafe (exit condition)
     vector<double> tot_changes;
     vector<total_changes> changes;
-    const int num_changes = data.size();//total number of data sets (lines)
-    for (int line = 0; line < num_changes; line++) {//obtain all the desired modifications from every data set
+    const size_t num_changes = data.size();//total number of data sets (lines)
+    for (size_t line = 0; line < num_changes; line++) {//obtain all the desired modifications from every data set
       new_data(rel_ideal);
       changes.push_back(improve(layerInd, ideal, t_changes));
     }
-    for (int i = 0; i < layers[layerInd].num_neurons; i++) {//all neurons
+    for (size_t i = 0; i < layers[layerInd].get_num_neurons(); i++) {//all neurons
       double avg_bias = 0;
-      for (int j = 0; j < num_changes; j++) {//all data values
+      for (size_t j = 0; j < num_changes; j++) {//all data values
 	avg_bias += changes[j].bias_changes[i];//add to average (total)
       }
       avg_bias /= num_changes;//divide by how many
       bias[layerInd - 1][i] += avg_bias;//change biases(always 1 less bc starts from output and dosent inclide first layer) by average
       tot_changes.push_back(avg_bias);//first indicator (of change direction) is biases
     }
-    for (int i = 0; i < layers[layerInd - 1].num_neurons; i++) {//all neurons in last layer(weights are emitted)
-      for (int j = 0; j < layers[layerInd].num_neurons; j++) {//for the individual weight of said neuron
+    for (size_t i = 0; i < layers[layerInd - 1].get_num_neurons(); i++) {//all neurons in last layer(weights are emitted)
+      for (size_t j = 0; j < layers[layerInd].get_num_neurons(); j++) {//for the individual weight of said neuron
 	double avg_weight = 0;
-	for (int k = 0; k < num_changes; k++) {//all data values
+	for (size_t k = 0; k < num_changes; k++) {//all data values
 	  avg_weight += changes[k].weight_changes[j][i];//add to average (total)
 	}
 	avg_weight /= num_changes;//divide by how many
@@ -219,31 +220,31 @@ void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> t_changes, 
 }
 
 
-string net::output(){
+string net::output() const{
   string ret;
   ret.append("//Data: " + to_string(focus_variable));
   ret.append("; Using: ");
-  if (usingSigmoid) ret.append("Sigmoid; ");
+  if (using_sigmoid) ret.append("Sigmoid; ");
   else ret.append("RelU; ");
   ret.append("weight_max: " + to_string(weight_max));
   ret.append("; network: {");
-  for (int i = 0; i < num_layers; i++) {
-    ret.append(to_string(layers[i].num_neurons));
+  for (size_t i = 0; i < num_layers; i++) {
+    ret.append(to_string(layers[i].get_num_neurons()));
     if (i < num_layers - 1) ret.append(", ");//comma to separate the num_neurons
   }
   ret.append("}; \n");
   //print all weights
   ret.append("weights[" + to_string(focus_variable) + "] = {\n");//open layer
-  for (int i = 0; i < num_layers - 1; i++) {
+  for (size_t i = 0; i < num_layers - 1; i++) {
     ret.append("   {\n");//open layer
-    for (int j = 0; j < layers[i].num_neurons; j++) {
+    for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {
       ret.append("      {");//open neuron
-      for (int k = 0; k < layers[i + 1].num_neurons; k++) {
+      for (size_t k = 0; k < layers[i + 1].get_num_neurons(); k++) {
 	ret.append(to_string(weights[i][j][k]));
-	if (k < layers[i + 1].num_neurons - 1) ret.append(", ");//comma to separate the weights
+	if (k < layers[i + 1].get_num_neurons() - 1) ret.append(", ");//comma to separate the weights
       }
       ret.append("}");//close neuron
-      if (j < layers[i].num_neurons - 1) ret.append(", \n");
+      if (j < layers[i].get_num_neurons() - 1) ret.append(", \n");
       else ret.append("\n");
     }
     ret.append("   },\n");//close layer
@@ -251,11 +252,11 @@ string net::output(){
   ret.append("};\n");
   //print all the biases
   ret.append("biases[" + to_string(focus_variable) + "] = {\n");//open layer
-  for (int i = 0; i < num_layers - 1; i++) {
+  for (size_t i = 0; i < num_layers - 1; i++) {
     ret.append("   {");//open layer
-    for (int j = 0; j < layers[i+1].num_neurons; j++) {
+    for (size_t j = 0; j < layers[i+1].get_num_neurons(); j++) {
       ret.append(to_string(bias[i][j]));
-      if (j < layers[i+1].num_neurons - 1) ret.append(", ");//comma to separate the biases
+      if (j < layers[i+1].get_num_neurons() - 1) ret.append(", ");//comma to separate the biases
     }
     ret.append("}");//close layer
     if (i < num_layers - 1) ret.append(", \n");
