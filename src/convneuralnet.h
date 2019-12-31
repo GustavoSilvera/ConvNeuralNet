@@ -39,12 +39,16 @@ public:
   //getters
   size_t get_num_networks() const;
   net get_network(size_t i) const;
+  bool is_training() const;
+  void train();
+  double get_avg_cost() const;
+  void stop_training();
+private:
   vector<net> network;
   vector<layer> ideals;
   vector<vector<double>> total_data;//single large dataset of all i/o
   vector<size_t> num_inputs, num_outputs;
   size_t num_networks;
-  double y_scale;
   double avg_cost, last_cost;//last_cost used to compute marginal
   bool training = false;
   //void update_pos(int x, int y);
@@ -52,7 +56,6 @@ public:
   void new_data();
   void randomize_weights();
   void comp_avg_cost();
-  void avg_improve();
   void output();
 };
 

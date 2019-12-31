@@ -9,9 +9,9 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
   for (int i = 0; i < 10; i++) {
-    if (cnn.training) {
-      cnn.avg_improve();
-      if (cnn.avg_cost < 1) cnn.training = false;
+    if (cnn.is_training()) {
+      cnn.train();
+      if (cnn.get_avg_cost() < 1) cnn.stop_training();
     }
   }
 }

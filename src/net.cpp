@@ -1,6 +1,6 @@
 #include "net.h"
 
-const size_t net::get_num_layers() const{
+size_t net::get_num_layers() const{
   return num_layers;
 }
 double net::get_avg_cost() const{
@@ -10,7 +10,7 @@ layer net::get_layer(size_t i) const{
   return layers[i];
 }
 
-void net::init(vector<vector<double>> total_data, vector<int> num_inputs){
+void net::init(vector<vector<double>> total_data, vector<size_t> num_inputs){
   for (size_t i = 0; i < num_layers; i++) {
     //creates the layers of the network
     layer L{num_neurons[i]};
@@ -45,7 +45,7 @@ void net::init(vector<vector<double>> total_data, vector<int> num_inputs){
     bias.push_back(ind_biases);
   }
 }
-void net::extract_data(vector<vector<double>> total_data, vector<int> num_inputs){
+void net::extract_data(vector<vector<double>> total_data, vector<size_t> num_inputs){
   for(size_t i = 0; i < total_data_lines; i++){
     vector<double> ind_line_data;
     for(size_t j = 0; j < num_inputs[i]; j++){//num_inputs[i] has index for all data (lines') individual num_inputs (should all be same)
@@ -123,12 +123,12 @@ void net::new_data(layer *optimal){
 void net::test_data(layer *optimal){
   if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
   vector<double> new_inputs;
-  for (int i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
+  for (size_t i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
     new_inputs.push_back(data[data_line][i]);
   }
   layers[0].update_weights(new_inputs);//first (input) layer is first updates
   vector<double> new_outputs;
-  for (int i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
+  for (size_t i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
     new_outputs.push_back(data[data_line][i]);
   }
   update_layers();
@@ -139,7 +139,7 @@ void net::test_data(layer *optimal){
 double net::compute_cost(layer *optimal){
   double error = 0;
   update_layers();
-  for (int i = 0; i < layers[num_layers - 1].get_num_neurons(); i++) {
+  for (size_t i = 0; i < layers[num_layers - 1].get_num_neurons(); i++) {
     error += sqr(layers[num_layers - 1].get_neuron(i).get_weight() - optimal->get_neuron(i).get_weight());
   }
   return error;
