@@ -3,6 +3,7 @@
 void ofApp::setup(){
   //seed random number generator
   std::srand(std::time(nullptr)); // use current time as seed for random generator
+  cnn.init();
   //  cnn.training = true;
 }
 

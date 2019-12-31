@@ -3,8 +3,8 @@
 void layer::init_rand(){
   //initializses the network's layer by RANDOMLY assigning to neurons
   for (size_t i = 0; i < num_neurons; i++) {
-    double random = (rand() % 1000) / 1000;
-    n.push_back(neuron(random));
+    double random = (rand() % 1000) / 1000.0;
+    n.push_back(neuron{random});
   }
 }
 size_t layer::get_num_neurons() const {

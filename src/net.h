@@ -24,7 +24,7 @@ public:
   //getters
   size_t get_num_layers() const;
   double get_avg_cost() const;
-  layer get_layer(size_t i) const;
+  const layer& get_layer(size_t i) const;//reference
   //training
   void start_training();
   void end_training();

@@ -8,7 +8,7 @@ public:
   double get_weight() const;
   void set_weight(const double value);
 private:
-  double weight = 0;//weight
+  double weight;//weight
 };
 
 #endif // NEURON_H

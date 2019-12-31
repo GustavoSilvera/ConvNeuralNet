@@ -1,4 +1,7 @@
 #include "net.h"
+#include <iostream>
+
+using namespace std;
 
 size_t net::get_num_layers() const{
   return num_layers;
@@ -6,20 +9,19 @@ size_t net::get_num_layers() const{
 double net::get_avg_cost() const{
   return avg_cost;
 }
-layer net::get_layer(size_t i) const{
+const layer& net::get_layer(size_t i) const{
+  if(i >= layers.size()) printf("BAD LAYER %zu %zu %zu", i, layers.size(), num_layers);
   return layers[i];
 }
-
 void net::init(vector<vector<double>> total_data, vector<size_t> num_inputs){
   for (size_t i = 0; i < num_layers; i++) {
     //creates the layers of the network
-    layer L{num_neurons[i]};
-    layers.push_back(L);
+    layers.emplace_back(num_neurons[i]);
   }
   total_data_lines = size_t(total_data.size());
   extract_data(total_data, num_inputs);
   //hovering colors
-  for (layer L : layers) {
+  for (layer& L : layers) {
     L.init_rand();//initialize all the layers randomly
   }
   //creates random weights

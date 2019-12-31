@@ -6,8 +6,10 @@
 
 class layer {
 public:
-  layer()  {}
-  layer(size_t n) : num_neurons(n) {}
+  layer(size_t n = 0) : num_neurons(n) {
+    init_rand();//instantiation randomizes weights
+  }
+  //  layer(const layer&) = delete;
   void init_rand();
   //getters
   size_t get_num_neurons() const;

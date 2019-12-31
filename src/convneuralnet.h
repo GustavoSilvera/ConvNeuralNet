@@ -7,11 +7,7 @@ using namespace std;
 
 class convneuralnet {
 public:
-  convneuralnet(vector<net> n) : network(n) {
-    num_networks = n.size();
-    read_data();
-    init();
-  }
+  convneuralnet(vector<net> n) : network(n), num_networks(n.size()) {}
   convneuralnet(){
     read_data();
     vector<vector<size_t>> inner_layers {{4, 2}, {3, 4}, {4, 2}};
