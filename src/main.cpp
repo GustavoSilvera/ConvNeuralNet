@@ -3,7 +3,7 @@
 
 void show_commands(){
   cout << "Inputs:\n";
-  cout << "  (data)   ===> input new data" << endl
+  cout << "  (test)   ===> input new data and compare" << endl
        << "  (output) ===> output network data to output.txt" << endl
        << "  (cost)   ===> print average network cost" << endl
        << "  (train)  ===> begin training of neural net" << endl
@@ -29,7 +29,7 @@ int main(){
     if (input == "Help" || input == "H" || input == "h" || input == "?"){
       show_commands();
     }
-    else if (input == "data"){
+    else if (input == "test"){
       a.cnn.new_data();
     }
     else if (input == "output"){

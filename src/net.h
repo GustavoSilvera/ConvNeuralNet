@@ -53,8 +53,8 @@ private:
   bool training = false;
   double cost = 0, total_cost = 0, avg_cost = 0;
   size_t total_data_lines, data_line = 0;
-  double sigmoid(double x);
-  double smooth_RelU(double x);
+  inline double sigmoid(double x);
+  inline double smooth_RelU(double x);
   struct total_changes {
     vector<vector<double>> weight_changes;
     vector<double> bias_changes;

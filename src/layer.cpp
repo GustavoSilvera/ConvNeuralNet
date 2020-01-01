@@ -10,7 +10,7 @@ void layer::init_rand(){
 size_t layer::get_num_neurons() const {
   return num_neurons;
 }
-neuron layer::get_neuron(size_t indx){
+const neuron layer::get_neuron(size_t indx) const{
   return n[indx];
 }
 void layer::set_neuron(size_t indx, double weight){

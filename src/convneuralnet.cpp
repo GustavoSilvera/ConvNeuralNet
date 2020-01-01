@@ -115,6 +115,12 @@ void convneuralnet::new_data(){
     //i indicates network and focus variable
     cout << " Network " << i << ": " << total_data[network[i].get_data_line()][i] << endl;
     network[i].test_data(&ideals[i]);
+    const layer& output_layer = network[i].get_layer(network[i].get_num_layers() - 1);
+    const double actual_output = output_layer.get_neuron(0).get_weight();
+    const double expected_output =  ideals[i].get_neuron(i).get_weight();
+    const double p_err = (actual_output - expected_output);
+    cout << "   Got: " << actual_output << " instead of "
+	 << expected_output << " (" << p_err << " error)" << endl;
   }
 }
 

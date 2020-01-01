@@ -13,7 +13,7 @@ public:
   void init_rand();
   //getters
   size_t get_num_neurons() const;
-  neuron get_neuron(size_t indx);
+  const neuron get_neuron(size_t indx) const;
   //setters
   void set_neuron(size_t indx, double weight);
   void update_weights(std::vector<double> values);

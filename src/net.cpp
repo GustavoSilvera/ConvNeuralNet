@@ -65,12 +65,12 @@ void net::extract_data(vector<vector<double>> total_data, vector<size_t> num_inp
     data.push_back(ind_line_data);
   }
 }
-double net::sigmoid(double x){
+inline double net::sigmoid(double x){
   const double e = 2.718282;
   return(1 / (1 + pow(e, -x)));
 }
 
-double net::smooth_RelU(double x){
+inline double net::smooth_RelU(double x){
   //const double e = 2.71828182846;
   if(x<5) return log10(1 + exp(x));
   return (0.4337151304 * x + 0.0058131963);//linear approx
