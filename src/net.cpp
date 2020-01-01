@@ -13,12 +13,16 @@ const layer& net::get_layer(size_t i) const{
   if(i >= layers.size()) printf("BAD LAYER %zu %zu %zu", i, layers.size(), num_layers);
   return layers[i];
 }
+size_t net::get_data_line() const{
+  return data_line;
+}
 void net::init(vector<vector<double>> total_data, vector<size_t> num_inputs){
   for (size_t i = 0; i < num_layers; i++) {
     //creates the layers of the network
     layers.emplace_back(num_neurons[i]);
   }
   total_data_lines = size_t(total_data.size());
+  data_line = 0;
   extract_data(total_data, num_inputs);
   //hovering colors
   for (layer& L : layers) {
