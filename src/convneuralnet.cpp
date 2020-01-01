@@ -120,7 +120,7 @@ void convneuralnet::new_data(){
     const double expected_output =  ideals[i].get_neuron(i).get_weight();
     const double p_err = (actual_output - expected_output);
     cout << "   Got: " << actual_output << " instead of "
-	 << expected_output << " (" << p_err << " error)" << endl;
+	 << expected_output << " (" << p_err << " error)\n";
   }
 }
 
