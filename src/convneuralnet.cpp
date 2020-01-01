@@ -24,8 +24,9 @@ double convneuralnet::get_avg_cost() {
   return avg_cost;
 }
 void convneuralnet::reset(){
-  new_data();
+  cout << "Resetting neural net...";
   randomize_weights();
+  cout << "Done!\n";
 }
 void convneuralnet::use_threads(){
   using_threads = true;
