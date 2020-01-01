@@ -1,8 +1,11 @@
 #include "convneuralnet.h"
+#include "util.h"
+
 #include <algorithm>
-#include <thread>
+#include <chrono>
 #include <iostream>
 #include <string.h>
+#include <thread>
 #include <unistd.h> /*getcwd*/
 
 using namespace std;
@@ -33,9 +36,20 @@ void convneuralnet::use_single(){
   cout << "Now using a Single Core\n";
 }
 void convneuralnet::begin_train(){
-  for(size_t i = 0; i < 1000; i++){
+  cout << "Starting CNN training:\n...";
+  auto start = std::chrono::steady_clock::now();
+  const size_t num_iter = 1000;
+  for(size_t i = 0; i < num_iter; i++){
     train();
+    if(i % num_iter/100 == 0){//every 10th
+      cout << ".";
+      cout.flush();//dosent affect performance much
+    }
   }
+  auto end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> diff = end-start;
+  std::cout << "Took " << diff.count() << "s\n";
+  cout << "Success!\n";
 }
 void convneuralnet::init(){
   if(read_data()) cout << "\n Read file successfully\n";
@@ -43,7 +57,6 @@ void convneuralnet::init(){
   for (size_t i = 0; i < num_networks; i++) {
     //each network corresponds to one specific output, thus one 'ideal' neuron
     ideals.emplace_back(1);//new layer of neuron past output layer
-    ideals[i].init_rand();
   }
   size_t i = 0;
   //initialize networks
@@ -117,8 +130,10 @@ bool convneuralnet::read_data(){
   file.close();
   return true;
 }
+
 void convneuralnet::new_data(){
   cout << "Inputting new data:" << endl;
+  cout << "Testing on line " << network[0].get_data_line() << " out of " << total_data.size() << endl; 
   for (size_t i = 0; i < num_networks; i++) {
     //data line indicates which line of data is being read
     //i indicates network and focus variable
@@ -126,10 +141,17 @@ void convneuralnet::new_data(){
     network[i].test_data(&ideals[i]);
     const layer& output_layer = network[i].get_layer(network[i].get_num_layers() - 1);
     const double actual_output = output_layer.get_neuron(0).get_weight();
-    const double expected_output =  ideals[i].get_neuron(i).get_weight();
+    const double expected_output =  ideals[i].get_neuron(0).get_weight();
     const double p_err = (actual_output - expected_output);
-    cout << "   Got: " << actual_output << " instead of "
-	 << expected_output << " (" << p_err << " error)\n";
+    if(expected_output != 0){
+      const double r_err = p_err / expected_output;//relative error
+      cout << "   Got: " << actual_output << " instead of "
+	   << expected_output << " (" << p_err << " error, " << 100*r_err << "%)\n";
+    }
+    else{
+      cout << "   Got: " << actual_output << " instead of "
+	   << expected_output << " (" << p_err << " error)\n";//NO %ERR
+    }
   }
 }
 
@@ -172,10 +194,24 @@ void convneuralnet::train(){
   calc_avg_cost();
 }
 void convneuralnet::output(){
-  ofstream output("output.txt");
+#define MAX_LINE 500
+  char cwd[MAX_LINE];
+  if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    printf("Current working dir: %s\n", cwd);
+  } else {
+    perror("getcwd() error");
+    return;
+  }
+  const string file_at = strcat(cwd, "/output.txt");
+  cout << "Saving current Network to \"" <<file_at << "\"\n  ";
+  ofstream output(file_at);
   for (size_t i = 0; i < num_networks; i++) {
+    cout << "...N" << i;
     output << "//Network: " << i + 1 << "\n";
     output << network[i].output();
+    cout << "...";
   }
   output.flush();
+  cout << "Success!\n";
+  
 }

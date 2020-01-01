@@ -9,7 +9,7 @@ using namespace std;
 void show_commands(){
   cout << "Inputs:\n";
   cout << "  (test)   ===> input new data and compare" << endl
-       << "  (output) ===> output network data to output.txt" << endl
+       << "  (save)   ===> save current network data to output.txt" << endl
        << "  (cost)   ===> print average network cost" << endl
        << "  (train)  ===> begin training of neural net" << endl
        << "  (multi)  ===> use multithreading computation" << endl
@@ -43,7 +43,7 @@ int main(){
     else if (input == "test"){
       a.new_data();
     }
-    else if (input == "output"){
+    else if (input == "save"){
       a.output();
     }
     else if (input == "cost"){

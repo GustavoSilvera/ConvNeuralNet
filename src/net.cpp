@@ -78,6 +78,7 @@ inline double net::smooth_RelU(double x){
 
 
 void net::update_layers(){
+  if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
   for (size_t i = 1; i < num_layers; i++) {//only the next layers (last ones)
     vector<double> new_values;
     const size_t layer_num_neurons = layers[i].get_num_neurons();
@@ -270,5 +271,4 @@ string net::output() const{
   }
   ret.append("};\n");
   return ret;
-
 }
