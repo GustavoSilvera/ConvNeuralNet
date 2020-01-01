@@ -108,21 +108,11 @@ void net::comp_avg_cost(layer *opt){
 }
 
 void net::new_data(layer *optimal){
-  if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
-  vector<double> new_inputs;
-  for (size_t i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
-    new_inputs.push_back(data[data_line][i]);
-  }
-  layers[0].update_weights(new_inputs);//first (input) layer is first updates
-  vector<double> new_outputs;
-  for (size_t i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
-    new_outputs.push_back(data[data_line][i]);
-  }
-  optimal->update_weights(new_outputs);//optimal (the "should be" output) layer is second
+  test_data(optimal);
+  //compute cost
   cost = compute_cost(optimal);
   total_cost += cost;
   num_errors++;
-  data_line++;//next line (next time)
   avg_cost = total_cost / num_errors;
 }
 
@@ -137,9 +127,9 @@ void net::test_data(layer *optimal){
   for (size_t i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
     new_outputs.push_back(data[data_line][i]);
   }
-  update_layers();
   optimal->update_weights(new_outputs);//optimal (the "should be" output) layer is second
   data_line++;//next line (next time)
+  update_layers();
 }
 
 double net::compute_cost(layer *optimal){

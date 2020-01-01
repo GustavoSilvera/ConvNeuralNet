@@ -36,12 +36,14 @@ public:
   size_t get_num_networks() const;
   net get_network(size_t i) const;
   bool is_training() const;
+  void use_threads();
+  void use_single();
+  //setters
   void begin_train();
-  double get_avg_cost() const;
+  double get_avg_cost();
   void new_data();
   void reset();
   void output();
-  void comp_avg_cost();
 private:
   vector<net> network;
   vector<layer> ideals;
@@ -54,6 +56,8 @@ private:
   bool read_data();
   void randomize_weights();
   void train();
+  void calc_avg_cost();
+  bool using_threads = true;
 };
 
 #endif // CONVNEURALNET_H

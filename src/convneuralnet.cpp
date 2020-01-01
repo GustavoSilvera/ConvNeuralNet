@@ -16,12 +16,21 @@ net convneuralnet::get_network(size_t i) const{
 bool convneuralnet::is_training() const{
   return training;
 }
-double convneuralnet::get_avg_cost() const {
+double convneuralnet::get_avg_cost() {
+  calc_avg_cost();
   return avg_cost;
 }
 void convneuralnet::reset(){
   new_data();
   randomize_weights();
+}
+void convneuralnet::use_threads(){
+  using_threads = true;
+  cout << "Now using Multithreading\n";
+}
+void convneuralnet::use_single(){
+  using_threads = false;
+  cout << "Now using a Single Core\n";
 }
 void convneuralnet::begin_train(){
   for(size_t i = 0; i < 1000; i++){
@@ -130,7 +139,7 @@ void convneuralnet::randomize_weights(){
   }
 }
 
-void convneuralnet::comp_avg_cost(){
+void convneuralnet::calc_avg_cost(){
   last_cost = avg_cost;
   avg_cost = 0;
   for (size_t i = 0; i < num_networks; i++) {
@@ -141,26 +150,26 @@ void convneuralnet::comp_avg_cost(){
 }
 
 void convneuralnet::train(){
-  vector<thread> threads;//amdalhs law
-  for(size_t i = 0; i < num_networks; i++){
-    //threads.push_back(thread(avg_improve_thread, &network[i], &ideals[i]));
-    threads.push_back(thread([&, i]{//creates new thread for computing individual avg_improve
-			       vector<double> v;
-			       network[i].avg_improve(&ideals[i], &ideals[i], v);
-			     }));
-  }
-  //for(size_t i = 0; i < num_networks; i++){
-  //    threads[i].join();
-  //}
-  for (auto &thread:threads) {
-    thread.join();
+  if(using_threads){
+    vector<thread> threads;//amdalhs law
+    for(size_t i = 0; i < num_networks; i++){
+      //creates new thread for computing individual avg_improve
+      threads.push_back(
+			thread([&, i]{vector<double> v; network[i].avg_improve(&ideals[i], &ideals[i], v);})
+			);
+    }
+    for (auto &thread:threads) {
+      thread.join();
+    }
   }
   //thread top (network[0].avg_improve, &ideals[0], &ideals[0], v);
-  /*for (size_t i = 0; i < num_networks; i++) {
-    vector<double> v;
-    network[i].avg_improve(&ideals[i], &ideals[i], v);
-    }*/
-  comp_avg_cost();
+  else{
+    for (size_t i = 0; i < num_networks; i++) {
+      vector<double> v;
+      network[i].avg_improve(&ideals[i], &ideals[i], v);
+    }
+  }
+  calc_avg_cost();
 }
 void convneuralnet::output(){
   ofstream output("output.txt");
