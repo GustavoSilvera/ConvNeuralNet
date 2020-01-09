@@ -5,11 +5,13 @@
 
 class convneuralnet {
 public:
-  convneuralnet(std::vector<net> n) : network(n), num_networks(n.size()) {
-    //read_data();
-    //init();//TODO
+  convneuralnet(std::vector<net> &n) : network(n), num_networks(n.size()) {
+    read_data();
+    init();
   }
-  convneuralnet(){
+  convneuralnet() {}//basic version w/ nothing yet
+  /*
+  convneuralnet(){//hardcoded
     read_data();
     std::vector<std::vector<size_t>> inner_layers {{4, 2}, {3, 4}, {4, 2}};
     std::vector<bool> using_sigmoid {true, false, true};
@@ -17,7 +19,7 @@ public:
     std::vector<std::vector<size_t>> final_layers;
     std::vector<net> n;
     for(size_t i = 0; i < num_inputs[i]; i++){//for all inputs (should be same accross all 'i')
-      vector<size_t> ind_layer{num_inputs[i]};
+      std::vector<size_t> ind_layer{num_inputs[i]};
       for(size_t j = 0; j < inner_layers[i].size(); j++){
 	ind_layer.push_back(inner_layers[i][j]);
       }
@@ -31,8 +33,9 @@ public:
     num_networks = n.size();
     network.swap(n);//update local network
     init();
-  }
+    }*/
   void init();
+  void set_nets(std::vector<net> n);//NOT a reference
   //getters
   size_t get_num_networks() const;
   net get_network(size_t i) const;
@@ -52,11 +55,11 @@ public:
   void resize(vec2 init, vec2 current);
   void draw();
 private:
-  vector<net> network;
-  vector<layer> ideals;
-  vector<vector<double>> total_data;//single large dataset of all i/o
+  std::vector<net> network;
+  std::vector<layer> ideals;
+  std::vector<std::vector<double>> total_data;//single large dataset of all i/o
   std::vector<std::vector<vec2>> network_pos, init_pos;
-  vector<size_t> num_inputs, num_outputs;
+  std::vector<size_t> num_inputs, num_outputs;
   size_t num_networks;
   double avg_cost, last_cost;//last_cost used to compute marginal
   bool training = false;

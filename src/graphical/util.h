@@ -30,6 +30,9 @@ inline double randfrom(double range, int decimals = 2){
   int rand_max = int(2 * tens_place * range);//n decimal places (pos/neg from range)
   return (((rand() % rand_max ) / tens_place ) - range);//new random weight from -range to range
 }
+inline size_t randint(size_t min, size_t max){
+  return size_t((rand() % (max - min)) + 1) + min;
+}
 static void renderFont(int size){
   font.load("verdana.ttf", size);//loading font at specific size
 }

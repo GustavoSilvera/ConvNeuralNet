@@ -41,23 +41,64 @@ void ofApp::draw(){
   drawFontText(cnn.get_avg_cost(), vec2(corner_fps.x - 100, corner_fps.y + 2 * 80));
   //drawFontText(cnn.total_data.size(), vec2(corner_fps.x - 100, corner_fps.y + 3 * 80));
 }
+void ofApp::read_first_line() {
+  //meant to update num_inputs and num_outputs from the first line of data. 
+  #define MAX_LINE 500
+  char cwd[MAX_LINE];
+  if(getcwd(cwd, sizeof(cwd)) != NULL){//null terminated string
+    std::cout << "Current working dir: " << cwd << endl;
+  }
+  else{
+    perror("getcwd() error");
+    return;
+  }
+  const string file_at = strcat(cwd, "/../data/data.txt");
+  ifstream file(file_at);
+  if(file.is_open()){
+    std::cout << "  Reading from \"" << file_at << endl;
+    char line[MAX_LINE];
+    file.getline(line, MAX_LINE);
+    string sline = line;
+    size_t end_inputs = sline.find(';');
+    size_t end_outputs = sline.size();
+    num_inputs = 0;
+    num_outputs = 0;
+    size_t i = 0;
+    while(sline.find(' ', i) < end_inputs){
+      size_t next_space = sline.find(' ', i);//finds next instance of " " from index i
+      num_inputs++;
+      i = next_space + 1;//not get inf loop finding same index
+    }
+    std::cout << "There are " << num_inputs << " inputs" << endl;
+    i = end_inputs + 2;//refresh i with new start
+    while(i < end_outputs){//space is IN FRONT of datum now... -_-
+      size_t next_space = sline.find(' ', i);//finds next instance of " " from index i
+      if(next_space == string::npos) next_space = end_outputs;//end of line
+      num_outputs++;
+      i = next_space+1;//not get inf loop finding same index
+    }
+    std::cout << "There are " << num_outputs << " outputs" << endl;
+  }
+  else{
+    perror("Missing file: data.txt");
+    throw std::exception();
+  }
+}
 void ofApp::print_help() const{
-  std::cout << "*************************";
-  std::cout << "***********Help! Inputs:************" <<endl;
+  std::cout << endl << "***********Help! Inputs:************" <<endl;
   std::cout << "SPACE     ==> Input next data element" << endl
 	    << "RSHIFT*   ==> Begin training" << endl
-	    << "CTRL      ==> Use multithreading" << endl
-	    << "ALT       ==> Use singlethreading" << endl
+	    << "M/m       ==> Use multithreading" << endl
+	    << "S/s       ==> Use singlethreading" << endl
 	    << "BACKSPACE ==> Save setup in output.txt" << endl
 	    << "ENTER/RET ==> Reset all networks" << endl
 	    << "H/h/?     ==> Output input help" << endl
 	    << "ESCAPE    ==> EXIT application"<< endl;
+  std::cout << "***********Help! Inputs:************" <<endl << endl;
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 #define OF_KEY_SPACE 32//OF dosent have it... :/
-#define OF_KEY_CTRL 0x0200
-#define OF_KEY_ALT 0x0300
   if (key == OF_KEY_SPACE) {//refreshed (new) model
     cnn.new_data();//only first line
   }
@@ -68,18 +109,18 @@ void ofApp::keyPressed(int key){
   }
   if (key == OF_KEY_SHIFT) {//begins the training
     if(cnn.is_training()) {
-      std::cout << "Starting CNN training..." <<endl;
+      std::cout << "...Stopping CNN training" <<endl;
       cnn.stop_training();
     }
     else {
-      std::cout << "...Stopping CNN training" << endl;
+      std::cout << "Starting CNN training..." << endl;
       cnn.start_training();
     }
   }
-  if(key == OF_KEY_CTRL) {//use multithreading
+  if(key == 'm' || key == 'M') {//use multithreading
     cnn.use_threads();
   }
-  if(key == OF_KEY_ALT) {//use singlethreading
+  if(key == 's' || key == 'S') {//use singlethreading
     cnn.use_single();
   }
   if (key == OF_KEY_RETURN) {//new random DATA

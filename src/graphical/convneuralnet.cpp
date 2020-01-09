@@ -59,7 +59,13 @@ void convneuralnet::start_training(){
 void convneuralnet::stop_training(){
   training = false;
 }
-
+void convneuralnet::set_nets(std::vector<net> n){
+  for(net &ind_net : n)
+    network.push_back(ind_net);
+  num_networks = n.size();
+  read_data();
+  init();
+}
 void convneuralnet::init(){
   y_scale = ofGetHeight() / num_networks;//divides the window width to the number of neural nets
   size_t largest_num_layers = 0;//the "num_layers" of the largest neural net
@@ -67,7 +73,7 @@ void convneuralnet::init(){
     if (network[i].get_num_layers() >= largest_num_layers) largest_num_layers = network[i].get_num_layers();
   }//simply finds the num_layers of the largest neural net
   for (size_t i = 0; i < num_networks; i++) {
-    vec2 pos{ 100, y_scale * (i + 0.5) };//init x = 100, (i+0.5) to not start top neural net at VERY top of window
+    vec2 pos{ 50, y_scale * (i + 0.5) };//init x = 100, (i+0.5) to not start top neural net at VERY top of window
     std::vector<vec2> ind_net_pos;
     ind_net_pos.emplace_back(pos.x, y_scale * (num_networks / 2.0) );//initial position (x & y) of input layer
     for(size_t j = 0; j < network[i].get_num_layers() - 2; j++){//for all layers in network[i] (not output)
