@@ -32,7 +32,7 @@ void net::init(std::vector<vec2> &pos, std::vector<std::vector<double>> &total_d
   //hovering colors
   for (size_t i = 0; i < num_layers; i++) {
     layers[i].init_rand();//init all the layers
-    vector<vec3> ind_col;//individual colors
+    std::vector<vec3> ind_col;//individual colors
     for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {
       ind_col.push_back(vec3{ 1, 1, 1 });//every node group's colour is initially white
     }
@@ -40,9 +40,9 @@ void net::init(std::vector<vec2> &pos, std::vector<std::vector<double>> &total_d
   }
   //creates random weights
   for (size_t i = 0; i < num_layers - 1; i++) {//for every (behind) layer [not the last one]
-    vector<vector<double>> ind_neuron;
+    std::vector<std::vector<double>> ind_neuron;
     for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in said layer
-      vector<double> ind_neuron_weights;
+      std::vector<double> ind_neuron_weights;
       for (size_t k = 0; k < layers[i + 1].get_num_neurons(); k++) {//for every neuron in the NEXT layer
 	int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
 	ind_neuron_weights.push_back(((rand() % rand_max) / 100.0) - weight_max);
@@ -53,7 +53,7 @@ void net::init(std::vector<vec2> &pos, std::vector<std::vector<double>> &total_d
   }
   //creates random biases
   for (size_t i = 1; i < num_layers; i++) {//for every later layer (not the first one)
-    vector<double> ind_biases;
+    std::vector<double> ind_biases;
     for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in said layer
       int rand_max = int(200 * weight_max);//2 decimal places (pos/neg from weight_max)
       ind_biases.push_back(((rand() % rand_max) / 100.0) - weight_max);//individual 'default' biases are 0
@@ -63,7 +63,7 @@ void net::init(std::vector<vec2> &pos, std::vector<std::vector<double>> &total_d
 }
 void net::extract_data(std::vector<std::vector<double>> &total_data, std::vector<size_t> &num_inputs){
   for(size_t i = 0; i < total_data_lines; i++){
-    vector<double> ind_line_data;
+    std::vector<double> ind_line_data;
     for(size_t j = 0; j < num_inputs[i]; j++){//num_inputs[i] has index for all data (lines') individual num_inputs (should all be same)
       ind_line_data.push_back(total_data[i][j]);
     }
@@ -90,7 +90,7 @@ inline double net::smooth_RelU(double x){
 void net::update_layers(){
   if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
   for (size_t i = 1; i < num_layers; i++) {//only the next layers (last ones)
-    vector<double> new_values;
+    std::vector<double> new_values;
     const size_t layer_num_neurons = layers[i].get_num_neurons();
     for (size_t j = 0; j < layer_num_neurons; j++) {//for every neuron in the next layers
       double weighted_sum = 0;
@@ -130,12 +130,12 @@ void net::new_data(layer *optimal){
 
 void net::test_data(layer *optimal){
   if(data_line >= total_data_lines) data_line = 0;//resets after a cycle
-  vector<double> new_inputs;
+  std::vector<double> new_inputs;
   for (size_t i = 0; i < layers[0].get_num_neurons(); i++) {//first .num_neuron elements in data[] is inputs
     new_inputs.push_back(data[data_line][i]);
   }
   layers[0].set_weights(new_inputs);//first (input) layer is first updates
-  vector<double> new_outputs;
+  std::vector<double> new_outputs;
   for (size_t i = layers[0].get_num_neurons(); i < data[data_line].size(); i++) {//starting where last loop left off
     new_outputs.push_back(data[data_line][i]);
   }
@@ -163,10 +163,10 @@ void net::randomize_weights(){
     }
   }
 }
-net::total_changes net::improve(int i, layer *ideal, vector<double> &t_changes){
+net::total_changes net::improve(int i, layer *ideal, std::vector<double> &t_changes){
   //for (int i = num_layers - 1; i > 1; i--) {//for every layer (except first one) (starting from end\output)
   total_changes t;
-  vector<double> changes;
+  std::vector<double> changes;
   if (t_changes.size() == 0) {//basically only for the output layer (same dimens as output-ideal)
     for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {
       changes.push_back(ideal->get_neuron(j).get_weight() - layers[i].get_neuron(j).get_weight());//difference bw output & ideal
@@ -186,7 +186,7 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> &t_changes){
     //compare neuron[i] to ideal_neuron[i];
     const double step = 0.001;
     double bias_change = step * changes[j];
-    vector<double> ind_mods;
+    std::vector<double> ind_mods;
     //increase weight if its neuron is positive, decrease if negative;
     for (size_t k = 0; k < layers[i-1].get_num_neurons(); k++) {//for every (behind)weight its attached to
       double weight_change = step * changes[j] * (layers[i-1].get_neuron(k).get_weight());//proportional difference to the direction of change and neuron value
@@ -200,11 +200,11 @@ net::total_changes net::improve(int i, layer *ideal, vector<double> &t_changes){
   return t;
 }
 
-void net::avg_improve(layer *ideal, layer *rel_ideal, vector<double> &t_changes, size_t layerInd){
+void net::avg_improve(layer *ideal, layer *rel_ideal, std::vector<double> &t_changes, size_t layerInd){
   if (t_changes.size() == 0) layerInd = num_layers - 1;//very first condition
   if (layerInd > 0) {//recursion failsafe (exit condition)
-    vector<double> tot_changes;
-    vector<total_changes> changes;
+    std::vector<double> tot_changes;
+    std::vector<total_changes> changes;
     const size_t num_changes = data.size();//total number of data sets (lines)
     for (size_t line = 0; line < num_changes; line++) {//obtain all the desired modifications from every data set
       new_data(rel_ideal);
@@ -291,7 +291,7 @@ string net::output() const{
 }
 void net::resize(const size_t w, const size_t h){
   for (size_t i = 1; i < num_layers; i++) {//only the next layers (last ones)
-    vector<double> new_values;
+    std::vector<double> new_values;
     for (size_t j = 0; j < layers[i].get_num_neurons(); j++) {//for every neuron in the next layers
       double weighted_sum = 0;
       const size_t prev_layer_num_neurons = layers[i - 1].get_num_neurons();

@@ -1,5 +1,6 @@
 #include "neuron.h"
 #include "util.h"
+
 double neuron::get_weight() const{
   //getter for weight wariable
   return weight;

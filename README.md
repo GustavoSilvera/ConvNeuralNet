@@ -22,6 +22,7 @@ Graphical Visualization of a Convolutional Neural Network in C++
 	Where spaces are used to divide the individual data entries and the semicolon (;) divides inputs against outputs.
 
 # **Controls: (Graphical)**
+**PRESS (H) (h) (?) to see this from the terminal**
 **SPACE:**\
 	Iterate through dataset and run into model.\
 **BACKSPACE:**\

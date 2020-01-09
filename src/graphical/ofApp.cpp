@@ -41,10 +41,23 @@ void ofApp::draw(){
   drawFontText(cnn.get_avg_cost(), vec2(corner_fps.x - 100, corner_fps.y + 2 * 80));
   //drawFontText(cnn.total_data.size(), vec2(corner_fps.x - 100, corner_fps.y + 3 * 80));
 }
-
+void ofApp::print_help() const{
+  std::cout << "*************************";
+  std::cout << "***********Help! Inputs:************" <<endl;
+  std::cout << "SPACE     ==> Input next data element" << endl
+	    << "RSHIFT*   ==> Begin training" << endl
+	    << "CTRL      ==> Use multithreading" << endl
+	    << "ALT       ==> Use singlethreading" << endl
+	    << "BACKSPACE ==> Save setup in output.txt" << endl
+	    << "ENTER/RET ==> Reset all networks" << endl
+	    << "H/h/?     ==> Output input help" << endl
+	    << "ESCAPE    ==> EXIT application"<< endl;
+}
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 #define OF_KEY_SPACE 32//OF dosent have it... :/
+#define OF_KEY_CTRL 0x0200
+#define OF_KEY_ALT 0x0300
   if (key == OF_KEY_SPACE) {//refreshed (new) model
     cnn.new_data();//only first line
   }
@@ -54,14 +67,30 @@ void ofApp::keyPressed(int key){
     //cnn.slight_push(0.1);//slight push in random dir for all the weights/biases (to kick net out of stagnation)
   }
   if (key == OF_KEY_SHIFT) {//begins the training
-    if(cnn.is_training()) cnn.stop_training();
-    else cnn.start_training();
+    if(cnn.is_training()) {
+      std::cout << "Starting CNN training..." <<endl;
+      cnn.stop_training();
+    }
+    else {
+      std::cout << "...Stopping CNN training" << endl;
+      cnn.start_training();
+    }
+  }
+  if(key == OF_KEY_CTRL) {//use multithreading
+    cnn.use_threads();
+  }
+  if(key == OF_KEY_ALT) {//use singlethreading
+    cnn.use_single();
   }
   if (key == OF_KEY_RETURN) {//new random DATA
     cnn.reset();
   }
   if(key == OF_KEY_ESC){
+    std::cout << "Goodbye!" << endl;
     OF_EXIT_APP(0);
+  }
+  if(key == 'H' || key == 'h'){
+    print_help();
   }
 }
 //--------------------------------------------------------------

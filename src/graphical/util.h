@@ -7,7 +7,9 @@
 #include <fstream>
 
 static ofTrueTypeFont font;
-using namespace glm;
+
+using namespace glm;//used for vec2/vec3
+
 static inline double clampd(double min, double max, double i) {
   if (i > min) {
     if (i < max) return i;

@@ -7,8 +7,6 @@
 #include <thread>
 #include <fstream>
 
-using namespace std;
-
 class ofApp : public ofBaseApp{
 public:
   ofApp() :
@@ -24,7 +22,7 @@ public:
 private:
   void keyPressed(int key);
   void windowResized(int w, int h);
-
+  void print_help() const;
   net n_x, n_y, n_z;
   convneuralnet cnn{};
 
