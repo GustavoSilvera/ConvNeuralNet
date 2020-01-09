@@ -1,25 +1,25 @@
 # ConvNeuralNet
-Simple 2D Visualization of a Convolutional Neural Net using OpenFrameworks2D and C++
+Graphical Visualization of a Convolutional Neural Network in C++
 
 ![](images/ConvNeuralNet.gif)
 
+# **About**
+	This project is split up into two forms: Graphical (using openFrameworks) and Terminal (shell)
 # **Requires (Graphical)** 
-	OpenFrameworks v0.10.1 ==> openframeworks.cc/download/
+  	OpenFrameworks v0.10.1 ==> openframeworks.cc/download/
+	Place the OF directory in your home directory ~/ or edit the OF_ROOT in the Makefile
 # **Requires (Terminal)** 
-	Clang++ and a terminal. 
-# **INSTALL:**
-    Once you install OpenFrameworks for your system, place it in the home directory with name OF/ and *make*
-# **HOW TO COMPILE (Graphical):**
-    First, compile using an IDE with support for C++ and OpenFrameworks Libraries.
-    Compiler should output an executable binary in /bin
-# **HOW TO COMPILE (Terminal):**
-    Run *make* from inside the /src directory, should output ./app in /src 
+  	g++ with a bash terminal
+# **INSTALL: (Graphical)**
+	run *./graphical.sh* in the project directory, then enter bin/ to run */graphical*
+# **INSTALL: (terminal)**
+	run *./terminal.sh* in the project directory, then enter bin/ to run */terminal*
+
 # **HOW TO USE:**
-    To use custom datasets simply modify/replace the DATA_good.txt file in /src.
-    **REQUIREMENTS:**
-	The format of the dataset should be "x y z ... ; a b c ..." on every line
+  	To use custom datasets simply modify/replace the *data.txt* file in data/.
+**REQUIREMENTS:**
+	The format of the dataset should be "x1 x2 ... xn ; y1 y2 ... ym " on every line
 	Where spaces are used to divide the individual data entries and the semicolon (;) divides inputs against outputs.
-	The same number of inputs and outputs should be used throughout the file.
 
 # **Controls: (Graphical)**
 **SPACE:**\
@@ -32,3 +32,6 @@ Simple 2D Visualization of a Convolutional Neural Net using OpenFrameworks2D and
 	Randomize weights on entire Neural Net\
 **ESC:**\
 	Exit application
+# **Controls: (Terminal)**
+  	All the information for input commands should be presented upon program launch
+	Or simply type 'help', 'H', or '?'
