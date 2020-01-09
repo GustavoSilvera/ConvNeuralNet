@@ -2,7 +2,7 @@
 
 #include "convneuralnet.h"
 #include "graph.h"
-#include "../ofMain.h"
+#include "/libs/openFrameworks/ofMain.h"
 #include <vector>
 #include <thread>
 #include <fstream>

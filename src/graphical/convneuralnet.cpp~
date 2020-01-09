@@ -97,7 +97,7 @@ bool convneuralnet::read_data(){
     perror("getcwd() error");
     return 1;
   }
-  const string file_at = strcat(cwd, "/../src/data.txt");
+  const string file_at = strcat(cwd, "/data.txt");
   ifstream file(file_at);//using CWD
   ifstream file2(file_at);//need this to find "file_length" bc the istreambuf iterator DELETES the file after reading??
   size_t file_length = size_t(count(istreambuf_iterator<char>(file2),istreambuf_iterator<char>(), '\n'));//gets number of '\n' in the file
@@ -135,9 +135,7 @@ bool convneuralnet::read_data(){
     }
   }
   else {
-    cout << "ERROR!\nUnable to open file: " << file_at << endl;
-    perror("Missing file: data.txt\n");
-    throw std::exception();
+    cout << "Unable to open file: " << file_at << endl;
     return false;
   }
   file.close();

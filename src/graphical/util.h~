@@ -1,7 +1,8 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "../ofMain.h"
+#include "/libs/openFrameworks/ofMain.h"//main OF include for everything... placed here bc everything includes util...
+
 
 #include <math.h>
 #include <fstream>

@@ -1,28 +1,27 @@
 # Makefile for Gustavo Silvera's 2019 Convolutional Neural Net Project:
-CC=clang++
-FLAGS=-Wall -Wextra -Werror -Wshadow -pedantic -g -fwrapv -pthread
+OF_ROOT=$HOME/OF
+
+CC=g++ #OpenFrameworks uses g++... clang++ also works for terminal though
+CPPFLAGS=-Wall -Wextra -Werror -Wshadow -pedantic -g -fwrapv -pthread 
+
 #either the terminal or graphical version
-.PHONY: terminal graphical clean
-default: graphical
+
+OF_ROOT=$(realpath ../../../OF)
+
+TERM_DIR=src/terminal
+TERM_OBJS=${TERM_DIR}/neuron.o \
+${TERM_DIR}/layer.o \
+${TERM_DIR}/net.o \
+${TERM_DIR}/convneuralnet.o \
+${TERM_DIR}/main.o
+
+all: terminal graphical
+
+terminal: bin/ConvNeuralNet
+
+bin/ConvNeuralNet: ${BASE_OBJS}
+	$(CC) $(FLAGS) -o bin/ConvNeuralNet ${TERM_OBJS} -lpthread
 
 graphical:
-# Attempt to load a config.make file.
-# If none is found, project defaults in config.project.make will be used.
-ifneq ($(wildcard config.make),)
-include config.make
-endif
+	make -C src/graphical
 
-# make sure the the OF_ROOT location is defined
-ifndef OF_ROOT
-OF_ROOT=$(realpath ../../..)
-endif
-
-# call the project makefile!
-include $(OF_ROOT)/libs/openFrameworksCompiled/project/makefileCommon/compile.project.mk
-
-
-terminal: 
-	$(CC) $(FLAGS) -o ConvNeuralNet neuron.cpp layer.cpp net.cpp convneuralnet.cpp main.cpp
-
-clean:
-rm -Rf bin/ConvNeuralNet
