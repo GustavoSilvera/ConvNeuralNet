@@ -87,12 +87,12 @@ bool convneuralnet::read_data(){
     perror("getcwd() error");
     return 1;
   }
-  const string file_at = strcat(cwd, "/data.txt"); 
+  const string file_at = strcat(cwd, "/../data/data.txt"); 
   ifstream file(file_at);//using CWD
   ifstream file2(file_at);//need this to find "file_length" bc the istreambuf iterator DELETES the file after reading??
   size_t file_length = size_t(count(istreambuf_iterator<char>(file2),istreambuf_iterator<char>(), '\n'));//gets number of '\n' in the file
   if(file.is_open()){
-    cout << "  Reading from \"" << cwd << "/data.txt\"\n"; 
+    cout << "  Reading from \"" << file_at << endl; 
     size_t line_num = 0;
     while (line_num < file_length) {
       char line[MAX_LINE];//default line (less than 100 chars)

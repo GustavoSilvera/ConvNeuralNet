@@ -17,11 +17,10 @@ ${TERM_DIR}/main.o
 
 all: terminal graphical
 
-terminal: bin/ConvNeuralNet
+terminal: bin/terminal
 
-bin/ConvNeuralNet: ${BASE_OBJS}
-	$(CC) $(FLAGS) -o bin/ConvNeuralNet ${TERM_OBJS} -lpthread
+bin/terminal: ${TERM_OBJS}
+	$(CC) $(FLAGS) -o bin/terminal ${TERM_OBJS} -lpthread
 
 graphical:
 	make -C src/graphical
-
