@@ -3,7 +3,7 @@
 void layer::init_rand(){
   //initializses the network's layer by RANDOMLY assigning to neurons
   for (size_t i = 0; i < num_neurons; i++) {
-    double random = (rand() % 1000) / 1000.0;
+    double random = (std::rand() % 1000) / 1000.0;
     n.push_back(neuron{random});
   }
 }

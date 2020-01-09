@@ -3,6 +3,10 @@ Graphical Visualization of a Convolutional Neural Network in C++
 
 ![](images/ConvNeuralNet.gif)
 
+Terminal simulation of a Convolutional Neural Network in C++
+
+![](images/terminal.png)
+
 # **About**
 	This project is split up into two forms: Graphical (using openFrameworks) and Terminal (shell)
 # **Requires (Graphical)** 

@@ -7,8 +7,9 @@ using namespace std;
 
 class convneuralnet {
 public:
-  convneuralnet(vector<net> n) : network(n), num_networks(n.size()) {}
-  convneuralnet(){
+  convneuralnet(vector<net> n) : network(n), num_networks(n.size()) {
+  }
+  /*convneuralnet(){ HARDCDED
     read_data();
     vector<vector<size_t>> inner_layers {{4, 2}, {3, 4}, {4, 2}};
     vector<bool> using_sigmoid {true, false, true};
@@ -30,7 +31,7 @@ public:
     num_networks = n.size();
     network.swap(n);//update local network
     init();
-  }
+  }*/
   void init();
   //getters
   size_t get_num_networks() const;

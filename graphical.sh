@@ -18,4 +18,4 @@ mv src/graphical/bin/* ./bin
 
 rm -rf src/graphical/bin #clean up bin folder
 printf "\n\nNote: the input data should still be in data/data.txt"
-printf "\nSUCCESS! enter /bin to run graphical using \"./graphical\""
+printf "\nSUCCESS! enter bin/ to run graphical using \"./graphical\""

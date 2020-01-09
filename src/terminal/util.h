@@ -24,9 +24,12 @@ inline double max(const double a, const double b){
   if(a > b) return a;
   return b;
 }
+inline size_t randint(size_t min, size_t max){
+  return size_t((rand() % (max - min)) + 1) + min;
+}
 inline double randfrom(double range, int decimals = 2){
   double tens_place = pow(10, decimals);
   int rand_max = int(2 * tens_place * range);//n decimal places (pos/neg from range)
-  return (((rand() % rand_max ) / tens_place ) - range);//new random weight from -range to range
+  return (((std::rand() % rand_max ) / tens_place ) - range);//new random weight from -range to range
 }
 #endif // UTIL_H
