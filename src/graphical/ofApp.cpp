@@ -14,7 +14,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-  //n.update_layers();//always recalculating new layer neuron values
   for (int i = 0; i < 10; i++) {
     if (cnn.is_training()) {
       cnn.train();
@@ -42,8 +41,8 @@ void ofApp::draw(){
   //drawFontText(cnn.total_data.size(), vec2(corner_fps.x - 100, corner_fps.y + 3 * 80));
 }
 void ofApp::read_first_line() {
-  //meant to update num_inputs and num_outputs from the first line of data. 
-  #define MAX_LINE 500
+  //meant to update num_inputs and num_outputs from the first line of data.
+#define MAX_LINE 500
   char cwd[MAX_LINE];
   if(getcwd(cwd, sizeof(cwd)) != NULL){//null terminated string
     std::cout << "Current working dir: " << cwd << endl;
@@ -84,6 +83,33 @@ void ofApp::read_first_line() {
     throw std::exception();
   }
 }
+void ofApp::randomize_nets(){//assuming num_inputs/outputs is setup
+  nets.clear();
+  if(num_inputs == 0 || num_outputs == 0) return;//dont do.
+  std::vector<std::vector<size_t>> num_layer_neurons;
+  for(size_t i = 0; i < num_inputs; i++){//for each network
+    //randomly generate internal layers
+    std::vector<size_t> num_neurons;
+    const size_t num_layers = randint(1,3);//min of 1 layer, max of 3
+    for(size_t j = 0; j < num_layers; j++){
+      num_neurons.push_back(randint(1, 5));//each layer can have 0-5 neurons
+    }
+    num_layer_neurons.push_back(num_neurons);
+  }
+  for(size_t i = 0; i < num_inputs; i++){
+    std::vector<size_t> layer_neurons = {num_inputs};//initialized w/ num inputs
+    const size_t num_layers = num_layer_neurons[i].size();
+    for(size_t j = 0; j < num_layers; j++){
+      layer_neurons.push_back(num_layer_neurons[i][j]);//internal layer data
+    }
+    layer_neurons.push_back(1);//each net focuses on a single output
+    bool using_sig = true;
+    if(randint(0,1) == 1) using_sig = false;
+    nets.emplace_back(i, layer_neurons,  using_sig, randint(1,2));//add to vector of nets
+  }
+  //random network
+  cnn.set_nets(nets);//custom constructor
+}
 void ofApp::print_help() const{
   std::cout << endl << "***********Help! Inputs:************" <<endl;
   std::cout << "SPACE     ==> Input next data element" << endl
@@ -99,6 +125,8 @@ void ofApp::print_help() const{
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 #define OF_KEY_SPACE 32//OF dosent have it... :/
+#define OF_KEY_TAB 9//OF dosent have it... :/
+
   if (key == OF_KEY_SPACE) {//refreshed (new) model
     cnn.new_data();//only first line
   }
@@ -132,6 +160,10 @@ void ofApp::keyPressed(int key){
   }
   if(key == 'H' || key == 'h'){
     print_help();
+  }
+  if(key == OF_KEY_TAB){
+    std::cout << "Randomizing network again..." << endl;
+    //randomize_nets();//too buggy rn... maybe a later project
   }
 }
 //--------------------------------------------------------------

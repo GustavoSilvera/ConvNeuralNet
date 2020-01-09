@@ -60,6 +60,7 @@ void convneuralnet::stop_training(){
   training = false;
 }
 void convneuralnet::set_nets(std::vector<net> n){
+  network.clear();//reset if there are some
   for(net &ind_net : n)
     network.push_back(ind_net);
   num_networks = n.size();
@@ -81,7 +82,7 @@ void convneuralnet::init(){
       ind_net_pos.emplace_back(pos.x, y_scale*(i + 0.5));
     }
     vec2 p{//position for OUTPUT layer (1 neuron ~centered)
-      pos.x += network[i].get_diff(),
+      (largest_num_layers-1) * network[i].get_diff(),//based off the largest net (in terms of layers)
 	(num_networks / 2.0) * y_scale + 75  * i
         };//divides evenly among the ypos based off number of neurons
     ind_net_pos.push_back(p);//last position for OUTPUT neuron
@@ -193,7 +194,10 @@ void convneuralnet::train(){
     for(size_t i = 0; i < num_networks; i++){
       //creates new thread for computing individual avg_improve
       threads.push_back(
-			std::thread([&, i]{std::vector<double> v; network[i].avg_improve(&ideals[i], &ideals[i], v);})
+			std::thread([&, i]{
+				      std::vector<double> v;
+				      network[i].avg_improve(&ideals[i], &ideals[i], v);
+				    })
 			);
     }
     for (auto &thread:threads) {

@@ -10,30 +10,6 @@ public:
     init();
   }
   convneuralnet() {}//basic version w/ nothing yet
-  /*
-  convneuralnet(){//hardcoded
-    read_data();
-    std::vector<std::vector<size_t>> inner_layers {{4, 2}, {3, 4}, {4, 2}};
-    std::vector<bool> using_sigmoid {true, false, true};
-    std::vector<size_t> maximum_weights{1, 1, 1};
-    std::vector<std::vector<size_t>> final_layers;
-    std::vector<net> n;
-    for(size_t i = 0; i < num_inputs[i]; i++){//for all inputs (should be same accross all 'i')
-      std::vector<size_t> ind_layer{num_inputs[i]};
-      for(size_t j = 0; j < inner_layers[i].size(); j++){
-	ind_layer.push_back(inner_layers[i][j]);
-      }
-      ind_layer.push_back(1);//final (output) layer
-      final_layers.push_back(ind_layer);
-    }
-    for(size_t i = 0; i < num_inputs[i]; i++){
-      net new_n{i, final_layers[i], using_sigmoid[i], maximum_weights[i]};
-      n.push_back(new_n);
-    }
-    num_networks = n.size();
-    network.swap(n);//update local network
-    init();
-    }*/
   void init();
   void set_nets(std::vector<net> n);//NOT a reference
   //getters

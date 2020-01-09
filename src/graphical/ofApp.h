@@ -55,6 +55,7 @@ private:
   void keyPressed(int key);
   void windowResized(int w, int h);
   void print_help() const;
+  void randomize_nets();
   void read_first_line();
   std::vector<net> nets;
   convneuralnet cnn;
