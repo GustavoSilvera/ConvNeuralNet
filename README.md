@@ -10,20 +10,28 @@ Terminal simulation of a Convolutional Neural Network in C++
 # **About**
 	This project is split up into two forms: Graphical (using openFrameworks) and Terminal (shell)
 # **Requires (Graphical)** 
-  	OpenFrameworks v0.10.1 ==> openframeworks.cc/download/
-	Place the OF directory in your home directory ~/ or edit the OF_ROOT in the Makefile
+  	OpenFrameworks v0.10.1 ==> **openframeworks.cc/download/** (Or look into **OF_install.sh** which is provided)
+	Place the OF directory in your home directory ~/ with name OF or edit the OF_ROOT in the Makefile
+	Run the internal script inside **OF/scripts/linux** or similarly for the windows/MacOS installation of OF
 # **Requires (Terminal)** 
   	g++ with a bash terminal
 # **INSTALL: (Graphical)**
-	run *./graphical.sh* in the project directory, then enter bin/ to run */graphical*
+  	FIRST, you will need openframeworks and there is an automated script (**OF_install.sh**)\
+	that will download everything and setup the OF directory as required by the program.
+	The script was written on a Ubuntu derivative, however to run on Arch/fedora/Debian there\
+	are similar install_dependencies scripts in the OF directory (refer to the OF_install.sh script). 
+	run **./graphical.sh** in the project directory, then enter bin/ to run **/graphical**
 # **INSTALL: (terminal)**
-	run *./terminal.sh* in the project directory, then enter bin/ to run */terminal*
+	run **./terminal.sh** in the project directory, then enter bin/ to run **/terminal**
 
 # **HOW TO USE:**
-  	To use custom datasets simply modify/replace the *data.txt* file in data/.
+  	To use custom datasets simply modify/replace the **data.txt** file in data/.
 **REQUIREMENTS:**
-	The format of the dataset should be "x1 x2 ... xn ; y1 y2 ... ym " on every line
-	Where spaces are used to divide the individual data entries and the semicolon (;) divides inputs against outputs.
+	The format of the dataset should be "x1 x2 ... x**n** ; y1 y2 ... y**m** " on every line\
+	(**m** dosent have to equal **n**)
+	Where spaces are used to divide the individual data entries and the semicolon (;) divides\
+	inputs against outputs.
+	Make sure to use the same number of inputs for all data entries (as would a normal function mapping). 
 
 # **Controls: (Graphical)**
 **PRESS (H) (h) (?) to see this from the terminal**
