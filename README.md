@@ -26,11 +26,11 @@ Terminal simulation of a Convolutional Neural Network in C++
 
 # **HOW TO USE:**
   	To use custom datasets simply modify/replace the data.txt file in data/.
-**REQUIREMENTS:**
-	-The format of the dataset should be "x1 x2 ... x**n** ; y1 y2 ... y**m** " on every line\
-	  (**m** dosent have to equal **n**)
-	-Where spaces are used to divide the individual data entries and the semicolon (;) divides\
-	  inputs against outputs.
+**REQUIREMENTS:**\
+	-The format of the dataset should be "x1 x2 ... x**n** ; y1 y2 ... y**m** " on every line
+	  (**m** dosent have to equal **n**)\
+	-Where spaces are used to divide the individual data entries and the semicolon (;) divides
+	  inputs against outputs.\
 	-Make sure to use the same number of inputs for all data entries (as would a normal function mapping). 
 
 # **Controls: (Graphical)**
