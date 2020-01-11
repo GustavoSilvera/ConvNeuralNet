@@ -10,22 +10,22 @@ Terminal simulation of a Convolutional Neural Network in C++
 # **About**
 	This project is split up into two forms: Graphical (using openFrameworks) and Terminal (shell)
 # **Requires (Graphical)** 
-  	-OpenFrameworks v0.10.1+ <b>openframeworks.cc/download/</b> (Or look into <b>OF_install.sh</b> thats provided)
-	-Unzip and place in your home directory ~/ with name OF/ or edit the <b>OF_ROOT</b> in the Makefile
-	-Run the internal script inside **OF/scripts/linux** or similarly for the windows/MacOS installation
+  	-OpenFrameworks v0.10.1+ openframeworks.cc/download/ (Or look into OF_install.sh thats provided)
+	-Unzip and place in your home directory ~/ with name OF/ or edit the OF_ROOT in the Makefile
+	-Run the internal script inside OF/scripts/linux or similarly for the windows/MacOS installation
 # **Requires (Terminal)** 
   	g++ with a bash terminal
 # **INSTALL: (Graphical)**
-  	-FIRST, you will need openframeworks and there is an automated script (<b>OF_install.sh</b>)
+  	-FIRST, you will need openframeworks and there is an automated script (OF_install.sh)
 	  that will download everything and setup the OF directory as required by the program.
 	-The script was written on a Ubuntu derivative, however to run on Arch/fedora/Debian there
 	  are similar install_dependencies scripts in the OF directory (refer to the OF_install.sh script). 
-	-run <b>./graphical.sh</b> in the project directory, then enter bin/ to run <b>/graphical</b>
+	-run ./graphical.sh in the project directory, then enter bin/ to run /graphical
 # **INSTALL: (terminal)**
-	run <b>./terminal.sh</b> in the project directory, then enter bin/ to run <b>/terminal</b>
+	run ./terminal.sh in the project directory, then enter bin/ to run /terminal
 
 # **HOW TO USE:**
-  	To use custom datasets simply modify/replace the <b>data.txt</b> file in data/.
+  	To use custom datasets simply modify/replace the data.txt file in data/.
 **REQUIREMENTS:**
 	-The format of the dataset should be "x1 x2 ... x**n** ; y1 y2 ... y**m** " on every line\
 	  (**m** dosent have to equal **n**)
