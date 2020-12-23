@@ -1,26 +1,25 @@
 # Makefile for Gustavo Silvera's 2019 Convolutional Neural Net Project:
 OF_ROOT=$HOME/OF
 
-CC=g++ #OpenFrameworks uses g++... clang++ also works for terminal though
+CC=g++ # OpenFrameworks uses g++ clang++ also works for terminal though
 CPPFLAGS=-Wall -Wextra -Werror -Wshadow -pedantic -g -fwrapv -pthread 
 
-#either the terminal or graphical version
+# either the tty or graphical version
+# OF_ROOT=$(realpath ../../../OF)
 
-OF_ROOT=$(realpath ../../../OF)
+TTY_DIR=src/tty
+TTY_OBJS=${TTY_DIR}/neuron.o \
+${TTY_DIR}/layer.o \
+${TTY_DIR}/net.o \
+${TTY_DIR}/convneuralnet.o \
+${TTY_DIR}/main.o
 
-TERM_DIR=src/terminal
-TERM_OBJS=${TERM_DIR}/neuron.o \
-${TERM_DIR}/layer.o \
-${TERM_DIR}/net.o \
-${TERM_DIR}/convneuralnet.o \
-${TERM_DIR}/main.o
+all: tty graphical
 
-all: terminal graphical
+tty: bin/ConvNeuralNet
 
-terminal: bin/terminal
-
-bin/terminal: ${TERM_OBJS}
-	$(CC) $(FLAGS) -o bin/terminal ${TERM_OBJS} -lpthread
+bin/ConvNeuralNet: ${TTY_OBJS}
+	$(CC) $(FLAGS) -o bin/ConvNeuralNet ${TTY_OBJS} -lpthread
 
 graphical:
 	make -C src/graphical
