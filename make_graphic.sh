@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# be SURE to have installed OF as described earlier
 
 #Run makefile
 make graphical

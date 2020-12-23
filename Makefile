@@ -14,6 +14,7 @@ ${TTY_DIR}/net.o \
 ${TTY_DIR}/convneuralnet.o \
 ${TTY_DIR}/main.o
 
+# TODO: add clean to remove all .o's
 all: tty graphical
 
 tty: bin/ConvNeuralNet
