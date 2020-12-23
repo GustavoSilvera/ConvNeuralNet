@@ -50,7 +50,7 @@ Inputs:
 ## Installation: (graphical)
 For the graphical interface you will need OpenFrameworks and there is an automated script (OF_install.sh) that will download everything and setup the OF directory as required by the program. The script was written on a Ubuntu derivative, however to run on Arch/fedora/Debian there are similar install_dependencies scripts in the OF directory (refer to the OF_install.sh script). Then run `install_graphical.sh` in the project directory, then enter `bin` to run the `graphical` executable.
 ## Installation (tty)
-Execute `install_tty.sh` in the project directory to create the binary and enter `bin` to run `ConvNeuralNet`
+Execute `make_tty.sh` in the project directory to create the binary and enter `bin` to run `ConvNeuralNet`
 
 ## Usage
 To use custom datasets simply modify/replace the data.txt file in `data/`.
