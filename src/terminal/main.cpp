@@ -63,7 +63,7 @@ void read_first_line(size_t &num_inputs, size_t &num_outputs) {
   }
 }
 int main(){
-  srand(stime(nullptr));
+  srand(time(nullptr));
   std::vector<net> nets;
   size_t num_inputs = 0;
   size_t num_outputs = 0;
