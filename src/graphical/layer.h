@@ -4,7 +4,8 @@
 #include "neuron.h"
 #include <vector>
 
-class layer {
+class layer
+{
 public:
   layer(size_t s, vec2 p) : num_neurons(s), pos(p) {}
   bool hovering = false;
@@ -21,10 +22,11 @@ public:
   void set_scale(double s);
   //other
   void draw();
+
 private:
   size_t num_neurons;
   vec2 pos;
-  double scale = 75;//how 'spread out' the neurons are
+  double scale = 75; //how 'spread out' the neurons are
   //need this?? double total_height;
   std::vector<neuron> n;
 };

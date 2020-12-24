@@ -5,9 +5,11 @@
 
 using namespace std;
 
-class convneuralnet {
+class convneuralnet
+{
 public:
-  convneuralnet(vector<net> n) : network(n), num_networks(n.size()) {
+  convneuralnet(vector<net> n) : network(n), num_networks(n.size())
+  {
   }
   /*convneuralnet(){ HARDCDED
     read_data();
@@ -45,13 +47,14 @@ public:
   void new_data();
   void reset();
   void output();
+
 private:
   vector<net> network;
   vector<layer> ideals;
-  vector<vector<double>> total_data;//single large dataset of all i/o
+  vector<vector<double>> total_data; //single large dataset of all i/o
   vector<size_t> num_inputs, num_outputs;
   size_t num_networks;
-  double avg_cost, last_cost;//last_cost used to compute marginal
+  double avg_cost, last_cost; //last_cost used to compute marginal
   bool training = false;
   //void update_pos(int x, int y);
   bool read_data();

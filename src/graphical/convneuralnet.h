@@ -3,15 +3,17 @@
 
 #include "net.h"
 
-class convneuralnet {
+class convneuralnet
+{
 public:
-  convneuralnet(std::vector<net> &n) : network(n), num_networks(n.size()) {
+  convneuralnet(std::vector<net> &n) : network(n), num_networks(n.size())
+  {
     read_data();
     init();
   }
-  convneuralnet() {}//basic version w/ nothing yet
+  convneuralnet() {} //basic version w/ nothing yet
   void init();
-  void set_nets(std::vector<net> n);//NOT a reference
+  void set_nets(std::vector<net> n); //NOT a reference
   //getters
   size_t get_num_networks() const;
   net get_network(size_t i) const;
@@ -30,14 +32,15 @@ public:
   void output();
   void resize(vec2 init, vec2 current);
   void draw();
+
 private:
   std::vector<net> network;
   std::vector<layer> ideals;
-  std::vector<std::vector<double>> total_data;//single large dataset of all i/o
+  std::vector<std::vector<double>> total_data; //single large dataset of all i/o
   std::vector<std::vector<vec2>> network_pos, init_pos;
   std::vector<size_t> num_inputs, num_outputs;
   size_t num_networks;
-  double avg_cost, last_cost;//last_cost used to compute marginal
+  double avg_cost, last_cost; //last_cost used to compute marginal
   bool training = false;
   //void update_pos(int x, int y);
   bool read_data();

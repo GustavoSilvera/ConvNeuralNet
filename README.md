@@ -6,7 +6,7 @@ A program where given a sequence of input-output pairs, tries to generate a line
 ![graphical preview](https://drive.google.com/uc?export=download&id=1EnxAo8Qs0iH9f2-_JwsUgMfDVtFMTiY5)
 
 ## Preview (tty)
-```bash
+```properties
 Current working dir: ./bin
   Reading from "./bin/../data/data.txt
 There are 3 inputs
@@ -42,11 +42,11 @@ Inputs:
 ```
 
 ### Prerequisites (graphical)
-- OpenFrameworks v0.10.1+ openframeworks.cc/download/ (Or look into OF_install.sh thats provided)
-- Unzip and place in your home directory ~/ with name OF/ or edit the OF_ROOT in the Makefile
-- Run the internal script inside OF/scripts/linux or similarly for the windows/MacOS installation
+- OpenFrameworks v0.10.1+ openframeworks.cc/download/ (Or look into `OF_install.sh` thats provided)
+- Unzip and place in your home directory with name `OF/` or edit the OF_ROOT in the Makefile
+- Run the internal script inside `OF/scripts/linux` or similarly for the windows/MacOS installation
 ### Prerequisites (tty)
-- g++ with a bash terminal
+- `g++` with a terminal
 ## Installation: (graphical)
 For the graphical interface you will need OpenFrameworks and there is an automated script (OF_install.sh) that will download everything and setup the OF directory as required by the program. The script was written on a Ubuntu derivative, however to run on Arch/fedora/Debian there are similar install_dependencies scripts in the OF directory (refer to the OF_install.sh script). Then run `install_graphical.sh` in the project directory, then enter `bin` to run the `graphical` executable.
 ## Installation (tty)

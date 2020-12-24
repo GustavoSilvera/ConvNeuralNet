@@ -2,7 +2,8 @@
 #define NEURON_H
 #include "util.h"
 
-class neuron {
+class neuron
+{
 public:
   //negative constructor
   neuron(double v, vec2 p) : weight(v), pos(p) {}
@@ -15,8 +16,9 @@ public:
   //other
   void draw() const;
   void border_color(double value);
+
 private:
-  vec3 col{255, 255, 255};//white
+  vec3 col{255, 255, 255}; //white
   double size = 30;
   double weight;
   vec2 pos;
